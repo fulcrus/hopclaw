@@ -1,0 +1,22 @@
+{
+  "delivery_id": "gdel_demo_dead_001",
+  "adapter_name": "audit-hub",
+  "delivery_status": "dead_letter",
+  "delivery_attempts": 4,
+  "delivery_max_attempts": 4,
+  "governance_kind": "security_event",
+  "source_event_id": "evt_approval_001",
+  "source_event_type": "approval.resolved",
+  "run_id": "run_demo_dead_001",
+  "session_id": "sess_demo_ops_001",
+  "event_id": "bus_evt_dead_001",
+  "event_time": "2026-03-19T08:00:00Z",
+  "event_type": "governance.delivery.dead_lettered",
+  "error": "upstream audit-hub webhook returned 503 after retry budget exhausted",
+  "_hook_context": {
+    "session_id": "sess_demo_ops_001",
+    "run_id": "run_demo_dead_001",
+    "phase": "post",
+    "trigger_time": "2026-03-19T08:00:00Z"
+  }
+}

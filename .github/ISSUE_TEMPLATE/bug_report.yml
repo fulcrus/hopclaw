@@ -1,0 +1,100 @@
+name: Bug report
+description: Report a reproducible bug in HopClaw
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug.
+
+        Before submitting, please:
+
+        1. Confirm the problem still reproduces on the latest visible release for your channel.
+        2. Run `hopclaw doctor`.
+        3. Generate a local support bundle with `hopclaw bug-report` if possible.
+
+        If the report is security-sensitive, stop here and use the private process in `SECURITY.md` instead of filing a public issue.
+
+  - type: input
+    id: version
+    attributes:
+      label: HopClaw version
+      description: Output of `hopclaw version`
+      placeholder: 2026.3.17
+    validations:
+      required: true
+
+  - type: dropdown
+    id: channel
+    attributes:
+      label: Release channel
+      options:
+        - stable
+        - beta
+        - nightly
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install_method
+    attributes:
+      label: Install method
+      options:
+        - release binary
+        - go install
+        - source checkout
+        - docker
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the actual behavior.
+      placeholder: The gateway starts, but update checks always fail with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include exact commands, config fragments, or inputs when possible.
+      placeholder: |
+        1. Run `hopclaw serve --config ...`
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, architecture, shell, container/runtime details, helper usage, etc.
+      placeholder: macOS 15 arm64, local desktop profile, managed browser helper
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or bug-report bundle details
+      description: Paste the relevant redacted excerpt, or mention that you generated a bundle with `hopclaw bug-report`.
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Screenshots, related commits, suspected regression version, or workarounds.

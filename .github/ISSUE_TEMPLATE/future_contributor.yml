@@ -1,0 +1,65 @@
+name: Future contributor interest
+description: Introduce yourself if you want to help with docs, repros, integrations, or code later
+title: "[Contributor]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        HopClaw is still tightening its binary-first rollout, but maintainers
+        want to identify real operators, reviewers, integration partners, and
+        future source contributors early.
+
+        Use this form if you want to join that pool.
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Who are you and how are you evaluating HopClaw?
+      description: Share your role, team context, or the kind of workflows you run.
+      placeholder: I run internal release ops and want a governed agent runtime for chat plus browser-backed workflows.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: lanes
+    attributes:
+      label: Where could you help first?
+      options:
+        - label: install and onboarding validation
+        - label: docs and terminology review
+        - label: bug reproduction and regression confirmation
+        - label: workflow and operator feedback
+        - label: integration design partner work
+        - label: examples or starter workflows
+        - label: core code contributions later
+    validations:
+      required: true
+
+  - type: textarea
+    id: systems
+    attributes:
+      label: Which systems or integrations matter most to you?
+      description: GitHub, Jira, Slack, Feishu/Lark, browser workflows, desktop workflows, email, release ops, etc.
+      placeholder: GitHub Issues, release notes, internal approval workflows, browser-based admin tools
+
+  - type: textarea
+    id: first_help
+    attributes:
+      label: What could you realistically help with in the next 30 days?
+      description: Keep this practical and concrete.
+      placeholder: I can validate the installer on Windows and Linux, review onboarding docs, and confirm whether a release candidate is understandable to first-time operators.
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Links or references
+      description: Optional GitHub repos, prior integrations, issue links, writeups, or anything that shows context.
+
+  - type: checkboxes
+    id: contact
+    attributes:
+      label: Follow-up
+      options:
+        - label: Maintainers can follow up with me in this issue thread.

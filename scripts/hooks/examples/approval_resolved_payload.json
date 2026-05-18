@@ -1,0 +1,38 @@
+{
+  "approval_id": "appr_demo_001",
+  "approval_kind": "tool_calls",
+  "status": "approved",
+  "resolved_by": "security-reviewer@example.com",
+  "tool_count": 1,
+  "reasons": [
+    "tool requires approval by finance export policy"
+  ],
+  "policy_source": "policy.finance.export",
+  "policy_summary": "approval required before external finance export",
+  "approval_external_refs": [
+    {
+      "provider": "jira",
+      "external_id": "JIRA-123",
+      "url": "https://jira.example.com/browse/JIRA-123",
+      "status": "pending_remote",
+      "synced_at": "2026-03-19T08:30:00Z"
+    }
+  ],
+  "approval_external_providers": [
+    "jira"
+  ],
+  "approval_external_statuses": [
+    "jira:pending_remote"
+  ],
+  "run_id": "run_demo_approval_001",
+  "session_id": "sess_demo_approval_001",
+  "event_id": "bus_evt_approval_001",
+  "event_time": "2026-03-19T08:30:00Z",
+  "event_type": "approval.resolved",
+  "_hook_context": {
+    "session_id": "sess_demo_approval_001",
+    "run_id": "run_demo_approval_001",
+    "phase": "post",
+    "trigger_time": "2026-03-19T08:30:00Z"
+  }
+}

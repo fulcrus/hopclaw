@@ -1,0 +1,26 @@
+HopClaw
+Copyright (c) 2026 HopClaw contributors
+
+This project is a Go port of, and derives code and assets from, OpenClaw:
+
+    OpenClaw
+    https://github.com/openclaw/openclaw
+    Copyright (c) 2025 Peter Steinberger
+    Licensed under the MIT License
+
+The following components are, or were originally, derived from OpenClaw and
+remain under their upstream MIT license:
+
+  - Skills under `skills/` whose directory names match OpenClaw upstream
+    (for example `1password/`, `apple-notes/`, `github/`, `notion/`,
+    `weather/`, etc.). See `skills/ATTRIBUTION.md` for the full list.
+  - Skill manifest conventions and the `openclaw:` manifest key used by
+    `skill/` and `plugin/` to parse those assets.
+  - Compatibility shims retained to ease migration from OpenClaw,
+    including the `.openclaw` skill discovery path, the `X-OpenClaw-Token`
+    HTTP header, and the `cmd/openclaw` alias binary.
+
+New Go code written for this project is licensed under the MIT License as
+stated in the LICENSE file. Downstream users who redistribute a modified
+version should preserve this NOTICE, preserve the LICENSE file, and keep a
+clear upstream attribution to both HopClaw and OpenClaw.

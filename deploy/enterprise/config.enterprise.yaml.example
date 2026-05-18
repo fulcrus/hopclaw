@@ -1,0 +1,53 @@
+server:
+  address: 0.0.0.0:16280
+  auth_token: env:HOPCLAW_AUTH_TOKEN
+
+store:
+  backend: sqlite
+  path: /home/hopclaw/.hopclaw/state
+
+runtime:
+  profile: production
+  audit:
+    enabled: true
+    output: /home/hopclaw/.hopclaw/audit/runtime.jsonl
+    delivery:
+      backend: sqlite
+      max_attempts: 8
+      base_backoff: 5s
+      max_backoff: 5m
+      poll_interval: 2s
+      batch_size: 32
+    sinks:
+      - name: corp-es
+        type: elasticsearch
+        elasticsearch:
+          url: ${AUDIT_ELASTICSEARCH_URL}
+          index: hopclaw-audit
+          api_key: env:AUDIT_ELASTICSEARCH_API_KEY
+      - name: corp-splunk
+        type: splunk_hec
+        splunk_hec:
+          url: ${AUDIT_SPLUNK_HEC_URL}
+          token: env:AUDIT_SPLUNK_HEC_TOKEN
+          source: hopclaw
+          source_type: hopclaw:audit
+          index: ai_audit
+
+models:
+  openai_compat:
+    base_url: https://api.openai.com/v1
+    model: ${OPENAI_MODEL}
+    api_key: env:OPENAI_API_KEY
+
+skills:
+  install_policy: ask
+
+tools:
+  capabilities:
+    exec:
+      mode: allowlist
+
+security:
+  dangerous_tools:
+    - exec

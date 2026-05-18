@@ -1,0 +1,4 @@
+name: sample-hooks
+version: "0.1.0"
+description: "Packaged sample HTTP hook for HopClaw"
+hooks_dir: hooks

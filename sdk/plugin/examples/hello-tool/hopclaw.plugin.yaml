@@ -1,0 +1,14 @@
+name: hello-tool
+version: "1.0.0"
+description: Example Level 0 tool plugin built with the HopClaw typed SDK.
+
+tools:
+  - name: hello.say
+    description: Return a personalized greeting.
+    endpoint: inline://hello.say
+    input_schema:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name to greet.

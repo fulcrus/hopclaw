@@ -1,0 +1,66 @@
+server:
+  address: 127.0.0.1:0
+
+store:
+  backend: memory
+
+agent:
+  system_prompt: |
+    You are HopClaw, a versatile AI assistant that completes tasks end-to-end.
+    Always produce concrete, verifiable output. When writing files, use artifact.save.
+    When running commands, use exec.run. Verify your work before reporting completion.
+  default_model: deepseek-chat
+  max_tool_rounds: 12
+  max_tool_recovery_attempts: 3
+  queue_mode: enqueue
+  dedupe_window: 5s
+
+runtime:
+  profile: trusted_desktop
+  status_reminder_delay: 3s
+  artifacts:
+    enabled: true
+    path: ./.hopclaw-e2e-artifacts
+    inline_threshold: 8192
+    preview_chars: 512
+    retention: 1h
+
+skills:
+  include_catalog: false
+  auto_detect: false
+  install_policy: deny
+
+models:
+  openai_compat:
+    base_url: https://api.deepseek.com
+    api_key: ${DEEPSEEK_API_KEY}
+    model: deepseek-chat
+    timeout: 120s
+
+tools:
+  builtins:
+    enabled: true
+    root: /tmp/hopclaw-e2e-workspace
+    default_exec_timeout: 30s
+    max_read_bytes: 262144
+  local_exec:
+    enabled: true
+    default_timeout: 30s
+  capabilities:
+    exec:
+      mode: allow
+      timeout: 30s
+      max_output: 1048576
+    net:
+      allow_private: false
+      allow_local: true
+      max_download: 10485760
+    fs:
+      skip_dirs:
+        - .git
+        - node_modules
+    layer2:
+      git: true
+      media: true
+      search: false
+      email: false

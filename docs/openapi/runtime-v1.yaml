@@ -1,0 +1,1290 @@
+openapi: 3.1.0
+info:
+  title: HopClaw Runtime API
+  version: "1.0"
+  description: |
+    Release-oriented OpenAPI document for the current HopClaw Runtime API.
+
+    This spec focuses on the stable HTTP runtime surface exposed under `/runtime/*`.
+    Some nested runtime payloads are intentionally modeled as open objects so the
+    spec stays aligned with the live service without overpromising every internal field.
+servers:
+  - url: http://127.0.0.1:16280
+    description: Local default server
+security:
+  - bearerAuth: []
+paths:
+  /healthz:
+    get:
+      summary: Health probe
+      security: []
+      responses:
+        "200":
+          description: Process is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /runtime/interact:
+    post:
+      summary: Unified interaction entry point
+      description: |
+        Submit a chat-style interaction that may create, resume, cancel, or clarify a run.
+
+        Natural-language turns may also complete as runless direct replies in the
+        conversational or clarification envelope. Those turns do not create a tracked
+        run, but they still stream through `/runtime/events/stream`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InteractionRequest"
+      responses:
+        "202":
+          description: Interaction accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InteractResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
+
+  /runtime/tools:
+    get:
+      summary: List runtime tools
+      parameters:
+        - in: query
+          name: session_key
+          schema:
+            type: string
+          description: Optional session key for contextual tool visibility.
+      responses:
+        "200":
+          description: Tool list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToolListResponse"
+
+  /runtime/runs:
+    get:
+      summary: List runs
+      parameters:
+        - in: query
+          name: session_id
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: include
+          schema:
+            type: string
+          description: Comma-separated include list. `verification` enriches list items. `execution_graph` includes the structured single-session execution graph on each run list item.
+      responses:
+        "200":
+          description: Run list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunListResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+    post:
+      summary: Submit a run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitRequest"
+      responses:
+        "201":
+          description: Run created without immediate execution
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+        "202":
+          description: Run accepted for execution
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+        "400":
+          $ref: "#/components/responses/Error"
+        "403":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}:
+    get:
+      summary: Get a run
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "200":
+          description: Run detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}/result:
+    get:
+      summary: Get run result projection
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "200":
+          description: Run result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunResult"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}/verification:
+    get:
+      summary: Get run verification
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "200":
+          description: Run verification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunVerification"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}/completion:
+    get:
+      summary: Get canonical run completion
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "200":
+          description: Run completion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunCompletion"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}/resume:
+    post:
+      summary: Resume a waiting run
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "202":
+          description: Run resumed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/runs/{id}/cancel:
+    post:
+      summary: Cancel a run
+      parameters:
+        - $ref: "#/components/parameters/RunID"
+      responses:
+        "200":
+          description: Cancelled run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Run"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/sessions:
+    get:
+      summary: List sessions
+      responses:
+        "200":
+          description: Session list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionListResponse"
+
+  /runtime/sessions/{id}:
+    get:
+      summary: Get a session
+      parameters:
+        - $ref: "#/components/parameters/SessionID"
+        - in: query
+          name: include
+          schema:
+            type: string
+            enum: [messages]
+          description: Set to `messages` to return the full session with message history.
+      responses:
+        "200":
+          description: Session detail
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/SessionSummary"
+                  - $ref: "#/components/schemas/Session"
+        "404":
+          $ref: "#/components/responses/Error"
+    delete:
+      summary: Delete a session
+      parameters:
+        - $ref: "#/components/parameters/SessionID"
+      responses:
+        "200":
+          description: Session deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /runtime/events:
+    get:
+      summary: List runtime events
+      parameters:
+        - in: query
+          name: since
+          schema:
+            type: string
+          description: Cursor / event id for incremental retrieval.
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: run_id
+          schema:
+            type: string
+        - in: query
+          name: session_id
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Event list or cursor response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/EventListResponse"
+                  - $ref: "#/components/schemas/EventCursorResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /runtime/events/stream:
+    get:
+      summary: Stream runtime events via Server-Sent Events
+      description: |
+        Streams tracked run events and runless direct-turn events over the same SSE endpoint.
+
+        For tracked execution, clients correlate events by `run_id`.
+
+        For runless conversational or clarification turns, `run_id` is empty and clients
+        should correlate `model.text_delta` and `model.stream_complete` using
+        `attrs.interaction_turn_id`. `attrs.interaction_envelope` indicates whether the
+        runless turn was `conversation` or `clarification`.
+      parameters:
+        - in: query
+          name: since
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: run_id
+          schema:
+            type: string
+        - in: query
+          name: session_id
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /runtime/approvals:
+    get:
+      summary: List approvals
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Approval list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApprovalListResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /runtime/approvals/{id}:
+    get:
+      summary: Get an approval
+      parameters:
+        - $ref: "#/components/parameters/ApprovalID"
+      responses:
+        "200":
+          description: Approval detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApprovalView"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/approvals/{id}/resolve:
+    post:
+      summary: Resolve an approval
+      parameters:
+        - $ref: "#/components/parameters/ApprovalID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApprovalResolution"
+      responses:
+        "200":
+          description: Approval resolved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApprovalView"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/artifacts:
+    get:
+      summary: List artifacts
+      parameters:
+        - in: query
+          name: kind
+          schema:
+            type: string
+        - in: query
+          name: run_id
+          schema:
+            type: string
+        - in: query
+          name: session_id
+          schema:
+            type: string
+        - in: query
+          name: tool_name
+          schema:
+            type: string
+        - in: query
+          name: tool_call_id
+          schema:
+            type: string
+        - in: query
+          name: before
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Artifact list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactListResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /runtime/artifacts/{id}:
+    get:
+      summary: Get artifact metadata
+      parameters:
+        - $ref: "#/components/parameters/ArtifactID"
+      responses:
+        "200":
+          description: Artifact metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactBlob"
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/artifacts/{id}/content:
+    get:
+      summary: Read artifact content
+      parameters:
+        - $ref: "#/components/parameters/ArtifactID"
+      responses:
+        "200":
+          description: Artifact content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/Error"
+
+  /runtime/memory:
+    get:
+      summary: Search or list memory entries
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: namespace
+          schema:
+            type: string
+        - in: query
+          name: scope_key
+          schema:
+            type: string
+        - in: query
+          name: managed_only
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Memory list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryListResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /runtime/memory/notebook:
+    get:
+      summary: Get the managed memory notebook
+      responses:
+        "200":
+          description: Notebook projection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryNotebook"
+
+  /runtime/memory/records:
+    post:
+      summary: Upsert a structured memory record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemoryRecordRequest"
+      responses:
+        "200":
+          description: Memory entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryEntry"
+        "400":
+          $ref: "#/components/responses/Error"
+
+  /runtime/memory/{key}:
+    get:
+      summary: Get a memory entry by key
+      parameters:
+        - $ref: "#/components/parameters/MemoryKey"
+      responses:
+        "200":
+          description: Memory entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MemoryEntry"
+        "404":
+          $ref: "#/components/responses/Error"
+    put:
+      summary: Set a memory value by key
+      parameters:
+        - $ref: "#/components/parameters/MemoryKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemorySetRequest"
+      responses:
+        "200":
+          description: Memory updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+    delete:
+      summary: Delete a memory entry by key
+      parameters:
+        - $ref: "#/components/parameters/MemoryKey"
+      responses:
+        "200":
+          description: Memory deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+
+  parameters:
+    RunID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    SessionID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    ApprovalID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    ArtifactID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+    MemoryKey:
+      in: path
+      name: key
+      required: true
+      schema:
+        type: string
+
+  responses:
+    Error:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    HealthResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    InteractResponse:
+      type: object
+      properties:
+        decision:
+          type: object
+          additionalProperties: true
+        context:
+          type: object
+          additionalProperties: true
+        run:
+          $ref: "#/components/schemas/Run"
+        submit_request:
+          $ref: "#/components/schemas/SubmitRequest"
+        approval_resolved:
+          type: boolean
+        approval_status:
+          type: string
+        run_cancelled:
+          type: boolean
+        steer_enqueued:
+          type: boolean
+        error:
+          type: string
+        message:
+          type: string
+          description: Final direct-surface reply text when available. Streaming clients may receive the same content incrementally from `/runtime/events/stream`.
+
+    InteractionRequest:
+      type: object
+      required: [session_key, content]
+      properties:
+        session_key:
+          type: string
+        parent_run_id:
+          type: string
+        content:
+          type: string
+        input:
+          type: string
+        external_event_id:
+          type: string
+        model:
+          type: string
+        automation_id:
+          type: string
+        metadata:
+          type: object
+          description: Optional caller metadata. Direct clients that want to correlate a runless streamed reply should provide `interaction_turn_id` here.
+          additionalProperties: true
+        structured_command:
+          type: object
+          additionalProperties: true
+        structured_approval:
+          type: object
+          additionalProperties: true
+
+    SubmitRequest:
+      type: object
+      required: [session_key, content]
+      properties:
+        session_id:
+          type: string
+        session_key:
+          type: string
+        parent_run_id:
+          type: string
+        external_event_id:
+          type: string
+        content:
+          type: string
+        input:
+          type: string
+        model:
+          type: string
+        automation_id:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        execute:
+          type: boolean
+
+    ToolDefinition:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        side_effect_class:
+          type: string
+        input_schema:
+          type: object
+          additionalProperties: true
+        output_schema:
+          type: object
+          additionalProperties: true
+      additionalProperties: true
+
+    ToolListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolDefinition"
+        count:
+          type: integer
+
+    Run:
+      type: object
+      properties:
+        id:
+          type: string
+        session_id:
+          type: string
+        scope:
+          type: object
+          additionalProperties: true
+        parent_run_id:
+          type: string
+        input_event_id:
+          type: string
+        status:
+          type: string
+        queue_mode:
+          type: string
+        phase:
+          type: string
+        execution_mode:
+          type: string
+        model:
+          type: string
+        effective_agent_profile:
+          type: object
+          additionalProperties: true
+        last_session_revision:
+          type: integer
+        tool_rounds:
+          type: integer
+        tool_recovery_count:
+          type: integer
+        semantic_signal:
+          type: object
+          additionalProperties: true
+        triage:
+          type: object
+          additionalProperties: true
+        task_contract:
+          type: object
+          additionalProperties: true
+        governance:
+          type: object
+          additionalProperties: true
+        approval_id:
+          type: string
+        pending_tools:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        preflight:
+          type: object
+          additionalProperties: true
+        error:
+          type: string
+        plan:
+          type: object
+          additionalProperties: true
+        execution_graph:
+          type: object
+          additionalProperties: true
+        started_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
+      additionalProperties: true
+
+    RunListItem:
+      allOf:
+        - $ref: "#/components/schemas/Run"
+        - type: object
+          properties:
+            created_at:
+              type: string
+              format: date-time
+            outcome:
+              type: string
+            verification_status:
+              type: string
+            verification_summary:
+              type: string
+
+    RunListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RunListItem"
+        count:
+          type: integer
+
+    LedgerEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        event_class:
+          type: string
+          enum: [evidence, audit, delivery]
+        type:
+          type: string
+        run_id:
+          type: string
+        session_id:
+          type: string
+        time:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        attrs:
+          type: object
+          additionalProperties: true
+
+    EventLedger:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: "#/components/schemas/LedgerEvent"
+
+    RunResult:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        status:
+          type: string
+        outcome:
+          type: string
+        error:
+          type: string
+        event_ledger:
+          $ref: "#/components/schemas/EventLedger"
+        governance:
+          type: object
+          additionalProperties: true
+        task_contract:
+          type: object
+          additionalProperties: true
+        task_outcomes:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        summary:
+          type: string
+        output:
+          type: string
+        verification_status:
+          type: string
+        verification_summary:
+          type: string
+        deliverables:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        delivery:
+          type: object
+          additionalProperties: true
+        receipts:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        bundle:
+          type: object
+          additionalProperties: true
+        next_actions:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        canonical:
+          type: object
+          additionalProperties: true
+
+    RunCompletion:
+      type: object
+      properties:
+        run_id:
+          type: string
+        session_id:
+          type: string
+        status:
+          type: string
+        outcome:
+          type: string
+        governance:
+          type: object
+          additionalProperties: true
+        result:
+          $ref: "#/components/schemas/RunResult"
+        verification:
+          $ref: "#/components/schemas/RunVerification"
+        delivery:
+          type: object
+          additionalProperties: true
+        bundle:
+          type: object
+          additionalProperties: true
+        receipts:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        updated_at:
+          type: string
+
+    RunVerification:
+      type: object
+      properties:
+        run_id:
+          type: string
+        status:
+          type: string
+        summary:
+          type: string
+        checks:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        warnings:
+          type: integer
+        failures:
+          type: integer
+        required_warnings:
+          type: integer
+        required_failures:
+          type: integer
+        advisory_warnings:
+          type: integer
+        advisory_failures:
+          type: integer
+
+    SessionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        key:
+          type: string
+        model:
+          type: string
+        revision:
+          type: integer
+        message_count:
+          type: integer
+        scope:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Session:
+      allOf:
+        - $ref: "#/components/schemas/SessionSummary"
+        - type: object
+          properties:
+            metadata:
+              type: object
+              additionalProperties: true
+            messages:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+
+    SessionListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SessionSummary"
+        count:
+          type: integer
+
+    EventView:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        run_id:
+          type: string
+        session_id:
+          type: string
+        time:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        severity:
+          type: string
+        governance:
+          type: object
+          additionalProperties: true
+      additionalProperties: true
+
+    EventListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventView"
+        count:
+          type: integer
+
+    EventCursorResponse:
+      type: object
+      required: [items, count, cursor_status, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/EventView"
+        count:
+          type: integer
+        cursor_status:
+          type: string
+        next_cursor:
+          type: string
+
+    ApprovalResolution:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Typically `approved`, `denied`, or `cancelled`.
+        decision:
+          type: string
+        note:
+          type: string
+        resolved_by:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    ApprovalView:
+      type: object
+      properties:
+        id:
+          type: string
+        run_id:
+          type: string
+        session_id:
+          type: string
+        kind:
+          type: string
+        status:
+          type: string
+        tool_name:
+          type: string
+        arguments:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        governance:
+          type: object
+          additionalProperties: true
+      additionalProperties: true
+
+    ApprovalListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApprovalView"
+        count:
+          type: integer
+
+    ArtifactBlob:
+      type: object
+      properties:
+        id:
+          type: string
+        uri:
+          type: string
+        kind:
+          type: string
+        content_type:
+          type: string
+        size:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties: true
+
+    ArtifactListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArtifactBlob"
+        count:
+          type: integer
+
+    MemoryEntry:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        namespace:
+          type: string
+        scope_key:
+          type: string
+        field:
+          type: string
+        label:
+          type: string
+        managed:
+          type: boolean
+        source:
+          type: string
+        confidence:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+        previous_values:
+          type: array
+          items:
+            type: string
+        evidence_count:
+          type: integer
+        score:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    MemoryListResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemoryEntry"
+        count:
+          type: integer
+
+    MemorySetRequest:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: string
+
+    MemoryRecordRequest:
+      type: object
+      required: [value]
+      properties:
+        key:
+          type: string
+        namespace:
+          type: string
+        scope_key:
+          type: string
+        field:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        source:
+          type: string
+        confidence:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+
+    MemoryNotebook:
+      type: object
+      properties:
+        path:
+          type: string
+        content:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      additionalProperties: true

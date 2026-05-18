@@ -1,0 +1,353 @@
+# Minimal local setup. Only `server`, `store`, `agent`, `models`, and the
+# builtin tool sections are required to start the runtime.
+server:
+  # Default: 127.0.0.1:16280
+  address: 127.0.0.1:16280
+  # Optional. Leave unset for local development, set before exposing the API.
+  auth_token: ${HOPCLAW_AUTH_TOKEN}
+
+store:
+  # Default: sqlite
+  backend: jsonl
+  # Default for sqlite backend: .hopclaw/state
+  path: ./.hopclaw/state
+
+agent:
+  system_prompt: |
+    You are HopClaw, a capable assistant that completes tasks reliably.
+
+    Core principles:
+    1. Understand the user's actual goal before acting. Ask only the minimum necessary clarifying questions.
+    2. For current, recent, or real-time information such as news, weather, prices, scores, versions, regulations, and schedules, always use available data tools to verify before answering. If no suitable tool is available, explicitly say the answer may be outdated and avoid implying live verification.
+    3. Use existing product capabilities and built-in tools first. Do not write ad hoc scripts, install packages, or craft raw HTTP requests when an existing capability can complete the task.
+    4. Match response depth to task complexity. Be concise for simple questions, and provide the necessary reasoning, caveats, and next steps for complex work.
+  # Default: unconfigured-model
+  default_model: gpt-4.1-mini
+  # Optional: dedicated model for ingress routing and task planning.
+  # Uses a lighter model to classify user intent and decompose tasks.
+  # Defaults to default_model when not set.
+  # triage_model: gpt-4.1-nano
+  # Default: 16
+  max_tool_rounds: 16
+  # How many times the model may retry after a tool execution error before
+  # the run fails. This is the base budget for direct runs. Planned and
+  # workflow runs automatically get +2 extra attempts because multi-step
+  # tasks benefit from more recovery room.
+  #
+  # Effective budget by execution mode:
+  #   direct / watch : max_tool_recovery_attempts       (default 3)
+  #   planned        : max_tool_recovery_attempts + 2   (default 5)
+  #   workflow       : max_tool_recovery_attempts + 2   (default 5)
+  #
+  # On each failed attempt the model receives the error, the attempt count,
+  # and how many retries remain, so it can adjust strategy or give a partial
+  # answer before the budget runs out.
+  max_tool_recovery_attempts: 3
+  # Default: 10m
+  max_run_duration: 10m
+  queue_mode: enqueue
+  # Default: 1m
+  dedupe_window: 1m
+
+runtime:
+  # Runtime profile:
+  #   desktop          - local-first defaults, approvals still enabled for risky tools
+  #   trusted_desktop  - lower-friction desktop mode for trusted personal use
+  #   production       - stricter defaults; requires auth_token, audit.enabled, and durable store
+  profile: desktop
+  # Default: 6s
+  # How long to wait before channel bridges send a "still processing" update.
+  status_reminder_delay: 6s
+  audit:
+    enabled: true
+    output: ./.hopclaw/audit/events.jsonl
+  artifacts:
+    enabled: true
+    path: ./.hopclaw/artifacts
+    inline_threshold: 8192
+    preview_chars: 512
+    retention: 168h
+
+update:
+  enabled: true
+  check_on_start: true
+  check_interval: 24h
+  # stable | beta | nightly
+  channel: stable
+  manifest_url: https://hopclaw.com/releases/manifest.json
+  # Optional: hide one known-bad release from prompts until you are ready.
+  # skip_version: 2026.3.17
+
+diagnostics:
+  enabled: true
+  bug_report_dir: ./.hopclaw/reports
+  include_logs: true
+  max_log_bytes: 524288
+  # Additional redaction patterns applied to bug-report bundles.
+  redact_patterns: []
+  # Anonymous product telemetry. Keep this off for strict enterprise deployments,
+  # or point it at a collector endpoint you operate or explicitly trust.
+  telemetry_enabled: false
+  # telemetry_endpoint: https://telemetry.example.com/api/v1/ingest/events
+  # telemetry_token: ${HOPCLAW_TELEMETRY_TOKEN}
+  # telemetry_timeout: 5s
+  # telemetry_debug_log: false
+  # Local collector settings. Enable these on the gateway that should
+  # accept anonymous install / active / plugin / skill telemetry from other
+  # HopClaw instances.
+  # telemetry_collector_enabled: true
+  # telemetry_collector_dir: ./.hopclaw/telemetry-collector
+  # telemetry_collector_auth_token: ${HOPCLAW_TELEMETRY_COLLECTOR_TOKEN}
+  # telemetry_collector_max_upload_bytes: 4194304
+  # When enabled, top-level CLI panics are captured into a local ZIP bundle.
+  crash_reports_enabled: false
+  # Optional remote upload target used by `hopclaw bug-report --submit`
+  # and automatic crash export.
+  # upload_url: https://beta.example.com/diagnostics/reports
+  # upload_token: ${HOPCLAW_DIAGNOSTICS_UPLOAD_TOKEN}
+  # upload_timeout: 15s
+  # Diagnostics collector settings. Enable these only on the gateway that
+  # should receive uploaded bug bundles.
+  # collector_enabled: true
+  # collector_dir: ./.hopclaw/collector
+  # collector_auth_token: ${HOPCLAW_DIAGNOSTICS_COLLECTOR_TOKEN}
+  # collector_max_upload_bytes: 16777216
+
+channels:
+  feishu:
+    # enabled: true
+    # app_id: cli_xxx
+    # app_secret: ${FEISHU_APP_SECRET}
+    # domain: feishu
+    # connection_mode: websocket   # websocket | webhook
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: disabled    # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+    # allow_from:
+    #   - ou_xxx
+    # group_allow_from:
+    #   - ou_admin
+    # default_account: china
+    # accounts:
+    #   china:
+    #     enabled: true
+    #     app_id: cli_cn_xxx
+    #     app_secret: ${FEISHU_CN_APP_SECRET}
+    #     domain: feishu
+    #     connection_mode: websocket
+    #   global:
+    #     enabled: true
+    #     app_id: cli_global_xxx
+    #     app_secret: ${FEISHU_GLOBAL_APP_SECRET}
+    #     domain: lark
+    #     connection_mode: webhook
+  slack:
+    # enabled: true
+    # bot_token: ${SLACK_BOT_TOKEN}
+    # app_token: ${SLACK_APP_TOKEN}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+    # allow_from:
+    #   - U123456
+    # group_allow_from:
+    #   - UADMIN
+  discord:
+    # enabled: true
+    # bot_token: ${DISCORD_BOT_TOKEN}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+    # allow_from:
+    #   - "1234567890"
+    # group_allow_from:
+    #   - "987654321"
+  telegram:
+    # enabled: true
+    # bot_token: ${TELEGRAM_BOT_TOKEN}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+    # allow_from:
+    #   - "123456789"
+    # group_allow_from:
+    #   - "777777777"
+  whatsapp:
+    # enabled: true
+    # phone_id: ${WHATSAPP_PHONE_ID}
+    # api_token: ${WHATSAPP_API_TOKEN}
+    # base_url: https://graph.facebook.com/v21.0
+    # dm_policy: open              # open | allowlist | pairing
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+    # allow_from:
+    #   - "8613800138000"
+  signal:
+    # enabled: true
+    # base_url: http://127.0.0.1:8080
+    # number: +1234567890
+    # auth_token: ${SIGNAL_AUTH_TOKEN}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+  line:
+    # enabled: true
+    # channel_secret: ${LINE_CHANNEL_SECRET}
+    # channel_token: ${LINE_CHANNEL_TOKEN}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+  msteams:
+    # enabled: true
+    # app_id: ${MSTEAMS_APP_ID}
+    # password: ${MSTEAMS_PASSWORD}
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+  matrix:
+    # enabled: true
+    # homeserver: https://matrix.org
+    # user_id: @bot:matrix.org
+    # access_token: ${MATRIX_ACCESS_TOKEN}
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+  mattermost:
+    # enabled: true
+    # base_url: https://mattermost.example.com
+    # bot_token: ${MATTERMOST_BOT_TOKEN}
+    # websocket_url: wss://mattermost.example.com
+    # dm_policy: open              # open | allowlist | pairing
+    # group_policy: open           # open | allowlist | disabled
+    # require_mention: true
+    # group_session_scope: group   # group | group_sender | group_thread | group_thread_sender
+    # reply_in_thread: enabled     # enabled | disabled
+    # dedupe_ttl: 24h
+    # dedupe_dir: ./.hopclaw/state/channels
+
+skills:
+  include_catalog: true
+  auto_detect: true
+  # Default: true
+  auto_refresh: true
+  # ask  - create an approval before installing a missing skill
+  # auto - install automatically when the agent calls skill.ensure / skill.install
+  # deny - never install skills at runtime
+  # Default: auto for `runtime.profile: desktop`; ask in production.
+  install_policy: auto
+  # Number of candidate skills to consider when resolving a missing capability.
+  # Default: 5
+  ensure_limit: 5
+  dirs:
+    - ./.hopclaw/skills
+
+hosts:
+  # Optional: enable the managed browser helper.
+  # With only enabled: true, HopClaw starts it on demand and stops it when idle.
+  # For an external helper, set base_url/auth_token instead and start it with:
+  #   hopclaw-browserd -listen 127.0.0.1:9223
+  browser:
+    # enabled: true
+    # base_url: http://127.0.0.1:9223
+    # auth_token: ${HOPCLAW_BROWSER_TOKEN}
+  # Optional: enable the managed desktop helper.
+  # With only enabled: true, HopClaw starts it on demand and stops it when idle.
+  # For an external helper, set base_url/auth_token instead and start it with:
+  #   hopclaw-desktopd -listen 127.0.0.1:9224
+  desktop:
+    # enabled: true
+    # base_url: http://127.0.0.1:9224
+    # auth_token: ${HOPCLAW_DESKTOP_TOKEN}
+
+models:
+  openai_compat:
+    base_url: ${OPENAI_BASE_URL}
+    api_key: ${OPENAI_API_KEY}
+    model: ${OPENAI_MODEL}
+    timeout: 60s
+
+tools:
+  builtins:
+    # Default: true
+    enabled: true
+    # Default: .
+    root: .
+    # Default: 30s
+    default_exec_timeout: 30s
+    # Default: 262144
+    max_read_bytes: 262144
+  local_exec:
+    # Default: true
+    enabled: true
+    # Default: 30s
+    default_timeout: 30s
+  capabilities:
+    exec:
+      mode: approve
+      timeout: 30s
+      max_output: 1048576
+    net:
+      allow_private: false
+      allow_local: true
+      max_download: 10485760
+    fs:
+      skip_dirs:
+        - .git
+        - node_modules
+        - vendor
+        - __pycache__
+        - .venv
+    layer2:
+      # Browser automation is intentionally omitted in this release.
+      git: true
+      media: true
+      container: true
+      packages: true
+      search: true
+      speech: true
+      email: true
+  services:
+    # Optional: enables search.web / search.news when configured.
+    search:
+      provider: tavily
+      api_key: ${TAVILY_API_KEY}
+    # Optional: enables speech.tts / speech.stt when configured.
+    speech:
+      base_url: ${OPENAI_BASE_URL}
+      api_key: ${OPENAI_API_KEY}
+      model: gpt-4o-mini-tts
+    # Optional: enables email.send only in this release.
+    email:
+      smtp_host: ${SMTP_HOST}
+      smtp_port: 587
+      username: ${SMTP_USERNAME}
+      password: ${SMTP_PASSWORD}
+      from: ${SMTP_FROM}

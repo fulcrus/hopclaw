@@ -1,0 +1,12 @@
+name: deepseek
+version: "1.0.0"
+description: DeepSeek model provider bundle
+
+providers:
+  deepseek:
+    api: openai-completions
+    base_url: https://api.deepseek.com/v1
+    default_model: deepseek-chat
+    api_key_hint: Set DEEPSEEK_API_KEY environment variable
+    env_vars:
+      - DEEPSEEK_API_KEY

@@ -1,0 +1,429 @@
+id: feishu-suite
+version: 0.1.0
+name: Feishu Suite
+description: Feishu/Lark product tools for docs, wiki, drive, and bitable.
+homepage: https://open.feishu.cn/
+author: Hopclaw
+license: Apache-2.0
+tags:
+  - feishu
+  - lark
+  - docs
+  - wiki
+  - drive
+  - bitable
+requires:
+  anyBins:
+    - python3
+    - python
+runtime:
+  type: executable
+  executable:
+    entry: runtime/feishu_suite.py
+prompt:
+  name: feishu-suite
+  description: Use Feishu product tools for docs, wiki, drive, and bitable operations.
+  instructions: |
+    Use the Feishu Suite tools for real Feishu/Lark product operations.
+
+    Preferred tool patterns:
+    - Resolve a user-provided Feishu URL first with `feishu.url.resolve`.
+    - Read document content with `feishu.doc.read` before summarizing or rewriting.
+    - Write updated markdown back with `feishu.doc.write`.
+    - For table-like data, use `feishu.bitable.meta.get`, `feishu.bitable.field.list`, and record tools.
+    - Use wiki and drive tools when the task targets spaces, nodes, folders, files, or permissions.
+
+    Writing rules:
+    - Do not mutate external content unless the user asked for it.
+    - Prefer verification-backed write tools and report the observed result.
+    - Treat destructive tools such as file delete and permission removal as explicit actions.
+  user_invocable: false
+openclaw:
+  skillKey: enterprise.feishu-suite
+  primaryEnv: FEISHU_APP_ID
+  requires:
+    env:
+      - FEISHU_APP_ID
+      - FEISHU_APP_SECRET
+    anyBins:
+      - python3
+      - python
+tools:
+  - name: feishu.url.resolve
+    description: Resolve a Feishu/Lark URL into canonical tokens for docs, wiki, drive, or bitable.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 20s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [url]
+      properties:
+        url:
+          type: string
+          description: Feishu or Lark URL to resolve.
+  - name: feishu.doc.read
+    description: Read a Feishu docx document as markdown-like raw content with metadata.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      properties:
+        document_id:
+          type: string
+        url:
+          type: string
+  - name: feishu.doc.blocks.list
+    description: List blocks in a Feishu docx document for structure-aware inspection.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      properties:
+        document_id:
+          type: string
+        url:
+          type: string
+  - name: feishu.doc.create
+    description: Create a new Feishu docx document and optionally seed it with markdown content.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [title]
+      properties:
+        title:
+          type: string
+        folder_token:
+          type: string
+        initial_content:
+          type: string
+  - name: feishu.doc.write
+    description: Replace or append markdown content in a Feishu docx document.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 60s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [content]
+      properties:
+        document_id:
+          type: string
+        url:
+          type: string
+        content:
+          type: string
+        mode:
+          type: string
+          enum: [replace, append]
+        parent_block_id:
+          type: string
+        index:
+          type: integer
+  - name: feishu.wiki.space.list
+    description: List Feishu wiki spaces visible to the application.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+  - name: feishu.wiki.node.list
+    description: List nodes under a Feishu wiki space or parent node.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [space_id]
+      properties:
+        space_id:
+          type: string
+        parent_node_token:
+          type: string
+  - name: feishu.wiki.node.get
+    description: Get metadata for a Feishu wiki node token.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      properties:
+        node_token:
+          type: string
+        url:
+          type: string
+  - name: feishu.wiki.node.create
+    description: Create a node in a Feishu wiki space.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [space_id, title]
+      properties:
+        space_id:
+          type: string
+        title:
+          type: string
+        obj_type:
+          type: string
+        parent_node_token:
+          type: string
+  - name: feishu.wiki.node.move
+    description: Move a Feishu wiki node within or across spaces.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [space_id, node_token]
+      properties:
+        space_id:
+          type: string
+        node_token:
+          type: string
+        target_space_id:
+          type: string
+        target_parent_token:
+          type: string
+  - name: feishu.wiki.node.rename
+    description: Rename a Feishu wiki node.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [space_id, node_token, title]
+      properties:
+        space_id:
+          type: string
+        node_token:
+          type: string
+        title:
+          type: string
+  - name: feishu.drive.file.list
+    description: List files in a Feishu drive folder.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      properties:
+        folder_token:
+          type: string
+  - name: feishu.drive.folder.create
+    description: Create a Feishu drive folder under the given parent folder token.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name:
+          type: string
+        folder_token:
+          type: string
+  - name: feishu.drive.file.move
+    description: Move a Feishu drive file or folder into another folder.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [file_token, type, folder_token]
+      properties:
+        file_token:
+          type: string
+        type:
+          type: string
+        folder_token:
+          type: string
+  - name: feishu.drive.file.delete
+    description: Delete a Feishu drive file or folder.
+    side_effect_class: destructive
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [file_token, type]
+      properties:
+        file_token:
+          type: string
+        type:
+          type: string
+  - name: feishu.drive.permission.list
+    description: List members who have access to a Feishu drive resource.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [token, type]
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+  - name: feishu.drive.permission.add
+    description: Add a member permission to a Feishu drive resource.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [token, type, member_type, member_id, perm]
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+        member_type:
+          type: string
+        member_id:
+          type: string
+        perm:
+          type: string
+  - name: feishu.drive.permission.remove
+    description: Remove a member permission from a Feishu drive resource.
+    side_effect_class: destructive
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [token, type, member_type, member_id]
+      properties:
+        token:
+          type: string
+        type:
+          type: string
+        member_type:
+          type: string
+        member_id:
+          type: string
+  - name: feishu.bitable.meta.get
+    description: Resolve Feishu bitable metadata from an app token or URL and list tables when possible.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+        url:
+          type: string
+  - name: feishu.bitable.field.list
+    description: List fields for a Feishu bitable table.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [app_token, table_id]
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+  - name: feishu.bitable.record.list
+    description: List records from a Feishu bitable table.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [app_token, table_id]
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+        page_size:
+          type: integer
+        page_token:
+          type: string
+  - name: feishu.bitable.record.get
+    description: Get a single record from a Feishu bitable table.
+    side_effect_class: read
+    idempotent: true
+    execution_key: session:{id}
+    timeout: 30s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [app_token, table_id, record_id]
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+        record_id:
+          type: string
+  - name: feishu.bitable.record.create
+    description: Create a record in a Feishu bitable table.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [app_token, table_id, fields]
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+        fields:
+          type: object
+  - name: feishu.bitable.record.update
+    description: Update a record in a Feishu bitable table.
+    side_effect_class: external_write
+    execution_key: session:{id}
+    timeout: 45s
+    input_schema:
+      type: object
+      additionalProperties: false
+      required: [app_token, table_id, record_id, fields]
+      properties:
+        app_token:
+          type: string
+        table_id:
+          type: string
+        record_id:
+          type: string
+        fields:
+          type: object

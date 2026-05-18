@@ -1,0 +1,777 @@
+/* ---------------------------------------------------------------------------
+   Chat view
+   Only chat-specific pieces live here; shared shell styles stay in app.css.
+   --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   Task workspace layout
+   --------------------------------------------------------------------------- */
+.hc-task-workspace-layout {
+  max-width: min(1440px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 18px;
+  align-items: start;
+}
+
+.hc-task-workspace-main {
+  min-width: 0;
+}
+
+.hc-task-workspace .hc-chat-inner {
+  max-width: none;
+}
+
+.hc-task-workspace-sidebar {
+  position: sticky;
+  top: 4px;
+  display: grid;
+  gap: 14px;
+}
+
+.hc-task-workspace-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.hc-task-workspace-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.hc-task-workspace-list {
+  display: grid;
+  gap: 10px;
+}
+
+.hc-task-workspace-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: var(--surface-alt);
+}
+
+.hc-task-workspace-link {
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.hc-task-workspace-link:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow);
+}
+
+.hc-task-workspace-item-head,
+.hc-task-workspace-chip-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hc-task-workspace-item-title {
+  font-weight: 800;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.hc-task-workspace-item-meta {
+  color: var(--ink3);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.hc-task-workspace-item-copy,
+.hc-task-workspace-note {
+  color: var(--ink2);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.hc-task-workspace .hc-attach-preview,
+.hc-task-workspace .hc-chat-input-inner,
+.hc-task-workspace .hc-chat-statusbar {
+  max-width: min(1440px, 100%);
+}
+
+/* ---------------------------------------------------------------------------
+   Empty state
+   --------------------------------------------------------------------------- */
+.hc-chat-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42vh;
+  padding: 40px 20px;
+}
+
+.hc-chat-empty-inner {
+  max-width: 560px;
+  text-align: center;
+}
+
+.hc-chat-empty-status {
+  margin-bottom: 22px;
+  color: var(--ink3);
+  font-size: 0.82rem;
+}
+
+.hc-chat-empty-sep {
+  opacity: 0.5;
+}
+
+.hc-chat-starters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hc-chat-starter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.hc-chat-starter-pill:hover {
+  background: var(--surface-alt);
+  border-color: var(--accent-border);
+  transform: translateY(-1px);
+}
+
+/* ---------------------------------------------------------------------------
+   Message list
+   --------------------------------------------------------------------------- */
+.hc-msg {
+  display: flex;
+  gap: 12px;
+  max-width: min(860px, 92%);
+  animation: hc-msg-in 0.22s ease;
+}
+
+.hc-msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.hc-msg.assistant {
+  align-self: flex-start;
+}
+
+.hc-msg-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.hc-msg.user .hc-msg-avatar {
+  background: var(--user-bg);
+  color: var(--user-fg);
+}
+
+.hc-msg.assistant .hc-msg-avatar {
+  background: var(--surface-alt);
+  color: var(--accent);
+  border: 1px solid var(--border-light);
+}
+
+.hc-msg-avatar svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hc-msg-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-msg-bubble {
+  padding: 14px 16px;
+  border-radius: 18px;
+  line-height: 1.65;
+  font-size: 0.94rem;
+  word-break: break-word;
+}
+
+.hc-msg.user .hc-msg-bubble {
+  background: var(--user-bg);
+  color: var(--user-fg);
+  border-bottom-right-radius: 6px;
+}
+
+.hc-msg.assistant .hc-msg-bubble {
+  background: var(--assistant-bg);
+  color: var(--assistant-fg);
+  border: 1px solid var(--border-light);
+  border-bottom-left-radius: 6px;
+}
+
+.hc-msg-time {
+  padding: 0 4px;
+  font-size: 0.72rem;
+  color: var(--ink3);
+}
+
+.hc-msg.user .hc-msg-time {
+  text-align: right;
+}
+
+@keyframes hc-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------------------------
+   Markdown content
+   --------------------------------------------------------------------------- */
+.hc-msg.assistant .hc-msg-bubble p {
+  margin: 0 0 0.7em;
+}
+
+.hc-msg.assistant .hc-msg-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.hc-msg.assistant .hc-msg-bubble h1,
+.hc-msg.assistant .hc-msg-bubble h2,
+.hc-msg.assistant .hc-msg-bubble h3 {
+  margin: 1em 0 0.5em;
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.hc-msg.assistant .hc-msg-bubble h1 { font-size: 1.18em; }
+.hc-msg.assistant .hc-msg-bubble h2 { font-size: 1.08em; }
+.hc-msg.assistant .hc-msg-bubble h3 { font-size: 1em; }
+
+.hc-msg.assistant .hc-msg-bubble ul,
+.hc-msg.assistant .hc-msg-bubble ol {
+  margin: 0.5em 0 0.8em 1.3em;
+}
+
+.hc-msg.assistant .hc-msg-bubble li + li {
+  margin-top: 0.25em;
+}
+
+.hc-msg.assistant .hc-msg-bubble a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.hc-msg.assistant .hc-msg-bubble blockquote {
+  margin: 0.9em 0;
+  padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--accent-border);
+  color: var(--ink2);
+}
+
+.hc-msg.assistant .hc-msg-bubble code {
+  padding: 0.18em 0.42em;
+  border-radius: 8px;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+.hc-msg.assistant .hc-msg-bubble pre {
+  position: relative;
+  margin: 0.9em 0;
+  padding: 14px;
+  border-radius: 16px;
+  overflow-x: auto;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+}
+
+.hc-msg.assistant .hc-msg-bubble pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.hc-msg.assistant .hc-msg-bubble table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.9em 0;
+  font-size: 0.88rem;
+}
+
+.hc-msg.assistant .hc-msg-bubble th,
+.hc-msg.assistant .hc-msg-bubble td {
+  padding: 8px 10px;
+  border: 1px solid var(--border-light);
+  text-align: left;
+}
+
+.hc-msg.assistant .hc-msg-bubble th {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Message actions
+   --------------------------------------------------------------------------- */
+.hc-msg-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.hc-msg-body:hover .hc-msg-actions {
+  opacity: 1;
+}
+
+.hc-msg-action-btn {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.hc-msg-action-btn:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Preflight cards
+   --------------------------------------------------------------------------- */
+.hc-preflight-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--warning);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hc-preflight-card.auto_preparing {
+  border-left-color: var(--accent);
+}
+
+.hc-preflight-card.needs_confirmation {
+  border-left-color: var(--warning);
+}
+
+.hc-preflight-card-title {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.hc-preflight-card-summary {
+  color: var(--ink2);
+  line-height: 1.55;
+}
+
+.hc-preflight-card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-preflight-template {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  font: 500 0.84rem/1.55 var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hc-preflight-card-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.hc-preflight-card-examples,
+.hc-preflight-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hc-preflight-chip {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+  background: var(--accent-subtle);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.hc-preflight-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-border);
+}
+
+/* ---------------------------------------------------------------------------
+   Task contract cards
+   --------------------------------------------------------------------------- */
+.hc-task-contract-card {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--border-light);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.92) 100%);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hc-governance-receipt-card {
+  border-left: 4px solid var(--accent);
+}
+
+.hc-governance-receipt-card.require_approval {
+  border-left-color: var(--warning);
+}
+
+.hc-governance-receipt-card.deny {
+  border-left-color: var(--danger);
+}
+
+.hc-governance-link {
+  color: var(--accent);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.hc-task-contract-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.hc-task-contract-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  flex: 1;
+}
+
+.hc-task-contract-title {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.hc-task-contract-summary {
+  color: var(--ink2);
+  line-height: 1.55;
+}
+
+.hc-task-contract-badges,
+.hc-task-contract-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hc-task-contract-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hc-task-contract-panel {
+  min-width: 0;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.72);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hc-task-contract-panel-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.hc-task-contract-panel-copy,
+.hc-task-contract-item-copy {
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.hc-task-contract-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hc-task-contract-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-task-contract-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hc-task-contract-item-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.hc-task-contract-item-hints,
+.hc-task-contract-empty {
+  color: var(--ink3);
+  line-height: 1.5;
+}
+
+@media (max-width: 820px) {
+  .hc-task-contract-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-task-workspace-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-task-workspace-sidebar {
+    position: static;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Tool details inside chat
+   --------------------------------------------------------------------------- */
+.hc-tool-toggle {
+  font-size: 0.78rem;
+  color: var(--ink3);
+}
+
+.hc-tool.open .hc-tool-toggle {
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Typing indicator
+   --------------------------------------------------------------------------- */
+.hc-typing {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 2px;
+}
+
+.hc-typing-avatar {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--surface-alt);
+  color: var(--accent);
+  border: 1px solid var(--border-light);
+}
+
+.hc-typing-avatar svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hc-typing-dots {
+  min-width: 62px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.hc-typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ink3);
+  animation: hc-typing-bounce 1.2s infinite ease-in-out;
+}
+
+.hc-typing-dots span:nth-child(1) { animation-delay: -0.24s; }
+.hc-typing-dots span:nth-child(2) { animation-delay: -0.12s; }
+
+@keyframes hc-typing-bounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.45; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ---------------------------------------------------------------------------
+   Attachments
+   --------------------------------------------------------------------------- */
+.hc-attach-preview {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  max-width: var(--max-w);
+  margin: 0 auto 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow);
+}
+
+.hc-attach-preview.vis {
+  display: flex;
+}
+
+.hc-attach-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.hc-attach-remove {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink3);
+  cursor: pointer;
+}
+
+.hc-attach-remove:hover {
+  background: var(--danger-subtle);
+  color: var(--danger);
+}
+
+.hc-file-input {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Session panel
+   --------------------------------------------------------------------------- */
+.hc-session-search {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--sidebar-ink);
+  font-size: 0.83rem;
+}
+
+.hc-session-search::placeholder {
+  color: var(--sidebar-ink-muted);
+}
+
+.hc-session-search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.hc-sess-delete {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sidebar-ink-muted);
+  cursor: pointer;
+}
+
+.hc-session-item:hover .hc-sess-delete {
+  display: inline-flex;
+}
+
+.hc-sess-delete:hover {
+  background: var(--surface-alt);
+  color: var(--danger);
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .hc-msg {
+    max-width: 100%;
+  }
+
+  .hc-chat-empty {
+    min-height: 32vh;
+    padding: 24px 12px;
+  }
+}

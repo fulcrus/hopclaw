@@ -1,0 +1,4278 @@
+openapi: 3.1.0
+info:
+  title: HopClaw Operator API
+  version: '1.0'
+  description: Machine-readable OpenAPI document for the current HopClaw operator and control-plane surface under /operator/*. This API evolves faster than the runtime API, so nested payloads are intentionally modeled as open objects unless they are already stable and obvious from the live handlers.
+servers:
+- url: http://127.0.0.1:16280
+  description: Local default server
+security:
+- bearerAuth: []
+tags:
+- name: Core
+  description: General operator status, auth, capabilities, nodes, devices, and instances.
+- name: Browser
+  description: Browser session and browser profile management.
+- name: Helpers
+  description: Managed helper process inventory and reclaim actions.
+- name: Devices
+  description: Pairing, trust, and token management for companion devices.
+- name: Diagnostics
+  description: Telemetry, sandbox, metrics, and wire diagnostics.
+- name: Automation
+  description: Automation templates, watch items, wakeup triggers, and cron jobs.
+- name: Control Plane
+  description: Approvals, policy engines, and setup/control-plane snapshots.
+- name: Governance
+  description: Governance deliveries, adapters, health, and event streams.
+- name: Audit
+  description: Audit sinks, deliveries, stats, and event listings.
+- name: Setup
+  description: Setup catalog and setup-completion status.
+- name: Config
+  description: Operator config inspection, section updates, preview, and validation.
+- name: Models
+  description: Model provider CRUD, router views, validation, and test chat.
+- name: Assets
+  description: Artifacts and pairing asset views.
+- name: Pairing
+  description: Channel pairing creation, verification, and revocation.
+- name: Channels
+  description: Channel CRUD, health, capability matrix, and allowlists.
+- name: Tools
+  description: Operator-side tool execution probes.
+- name: Skills
+  description: Installed skills, catalog views, install flows, and skill config.
+- name: Knowledge
+  description: Knowledge source CRUD and search/sync operations.
+- name: Hooks
+  description: Webhook and hook registry management plus replay/fire operations.
+- name: Plugins
+  description: Plugin install, inspect, enable/disable, and uninstall flows.
+- name: Usage
+  description: Usage, provider, session, and daily roll-up views.
+- name: Quality
+  description: Quality summaries, release readiness, and eval execution.
+- name: Discovery
+  description: Peer discovery inventory and resolver status.
+paths:
+  /operator/agents:
+    get:
+      tags:
+      - Core
+      operationId: getAgents
+      summary: Get agents
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/agents/{name}:
+    get:
+      tags:
+      - Core
+      operationId: getAgentsName
+      summary: Get agents name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/allowlist:
+    get:
+      tags:
+      - Channels
+      operationId: getAllowlist
+      summary: Get allowlist
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/allowlist/{channel}:
+    get:
+      tags:
+      - Channels
+      operationId: getAllowlistChannel
+      summary: Get allowlist channel
+      parameters:
+      - in: path
+        name: channel
+        required: true
+        schema:
+          type: string
+        description: Path parameter channel.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    put:
+      tags:
+      - Channels
+      operationId: putAllowlistChannel
+      summary: Put allowlist channel
+      parameters:
+      - in: path
+        name: channel
+        required: true
+        schema:
+          type: string
+        description: Path parameter channel.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Channels
+      operationId: deleteAllowlistChannel
+      summary: Delete allowlist channel
+      parameters:
+      - in: path
+        name: channel
+        required: true
+        schema:
+          type: string
+        description: Path parameter channel.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/approvals:
+    get:
+      tags:
+      - Control Plane
+      operationId: getApprovals
+      summary: Get approvals
+      parameters:
+      - in: query
+        name: status
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: offset
+        schema:
+          type: integer
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/approvals/providers:
+    get:
+      tags:
+      - Control Plane
+      operationId: getApprovalsProviders
+      summary: Get approvals providers
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/approvals/{id}/cancel:
+    post:
+      tags:
+      - Control Plane
+      operationId: postApprovalsIdCancel
+      summary: Post approvals id cancel
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/approvals/{id}/resolve:
+    post:
+      tags:
+      - Control Plane
+      operationId: postApprovalsIdResolve
+      summary: Post approvals id resolve
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/artifacts:
+    get:
+      tags:
+      - Assets
+      operationId: getArtifacts
+      summary: Get artifacts
+      parameters:
+      - in: query
+        name: kind
+        schema:
+          type: string
+      - in: query
+        name: run_id
+        schema:
+          type: string
+      - in: query
+        name: session_id
+        schema:
+          type: string
+      - in: query
+        name: tool_name
+        schema:
+          type: string
+      - in: query
+        name: tool_call_id
+        schema:
+          type: string
+      - in: query
+        name: before
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 0
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/artifacts/{id}/preview:
+    get:
+      tags:
+      - Assets
+      operationId: getArtifactsIdPreview
+      summary: Get artifacts id preview
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Artifact preview stream.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/deliveries:
+    get:
+      tags:
+      - Audit
+      operationId: getAuditDeliveries
+      summary: Get audit deliveries
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/deliveries/redrive:
+    post:
+      tags:
+      - Audit
+      operationId: postAuditDeliveriesRedrive
+      summary: Post audit deliveries redrive
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/deliveries/stats:
+    get:
+      tags:
+      - Audit
+      operationId: getAuditDeliveriesStats
+      summary: Get audit deliveries stats
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/deliveries/{id}:
+    get:
+      tags:
+      - Audit
+      operationId: getAuditDeliveriesId
+      summary: Get audit deliveries id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/deliveries/{id}/redrive:
+    post:
+      tags:
+      - Audit
+      operationId: postAuditDeliveriesIdRedrive
+      summary: Post audit deliveries id redrive
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/events:
+    get:
+      tags:
+      - Audit
+      operationId: getAuditEvents
+      summary: Get audit events
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/audit/sinks:
+    get:
+      tags:
+      - Audit
+      operationId: getAuditSinks
+      summary: Get audit sinks
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/authz:
+    get:
+      tags:
+      - Core
+      operationId: getAuthz
+      summary: Get authorization summary
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/automation/items:
+    get:
+      tags:
+      - Automation
+      operationId: getAutomationItems
+      summary: Get automation items
+      parameters:
+      - in: query
+        name: kinds
+        schema:
+          type: string
+        description: Comma-separated automation kinds such as cron,wakeup, watch, or hook.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/automation/items/{kind}/{id}:
+    get:
+      tags:
+      - Automation
+      operationId: getAutomationItemsKindId
+      summary: Get automation items kind id
+      parameters:
+      - in: path
+        name: kind
+        required: true
+        schema:
+          type: string
+        description: Path parameter kind.
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/automation/templates:
+    get:
+      tags:
+      - Automation
+      operationId: getAutomationTemplates
+      summary: Get automation templates
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/browser/profiles:
+    get:
+      tags:
+      - Browser
+      operationId: getBrowserProfiles
+      summary: Get browser profiles
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Browser
+      operationId: postBrowserProfiles
+      summary: Post browser profiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/browser/profiles/{name}:
+    delete:
+      tags:
+      - Browser
+      operationId: deleteBrowserProfilesName
+      summary: Delete browser profiles name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/browser/sessions:
+    get:
+      tags:
+      - Browser
+      operationId: getBrowserSessions
+      summary: Get browser sessions
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/browser/sessions/{id}:
+    delete:
+      tags:
+      - Browser
+      operationId: deleteBrowserSessionsId
+      summary: Delete browser sessions id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/capabilities:
+    get:
+      tags:
+      - Core
+      operationId: getCapabilities
+      summary: Get capabilities
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/capabilities/{name}/sessions:
+    get:
+      tags:
+      - Core
+      operationId: getCapabilitiesNameSessions
+      summary: Get capabilities name sessions
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/capabilities/{name}/sessions/{id}:
+    delete:
+      tags:
+      - Core
+      operationId: deleteCapabilitiesNameSessionsId
+      summary: Delete capabilities name sessions id
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels:
+    get:
+      tags:
+      - Channels
+      operationId: getChannels
+      summary: Get channels
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Channels
+      operationId: postChannels
+      summary: Post channels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/detect:
+    post:
+      tags:
+      - Channels
+      operationId: postChannelsDetect
+      summary: Detect channel configuration hints from probe input
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/health:
+    get:
+      tags:
+      - Channels
+      operationId: getChannelsHealth
+      summary: List channel runtime health
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/matrix:
+    get:
+      tags:
+      - Channels
+      operationId: getChannelsMatrix
+      summary: Get channel capability matrix
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/test-message:
+    post:
+      tags:
+      - Channels
+      operationId: postChannelsTestMessage
+      summary: Send a test message through a channel
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/thread-bindings:
+    get:
+      tags:
+      - Channels
+      operationId: getChannelsThreadBindings
+      summary: List saved channel thread bindings
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/thread-bindings/{channel}/{thread_id}:
+    delete:
+      tags:
+      - Channels
+      operationId: deleteChannelsThreadBindingsChannelThreadId
+      summary: Delete channels thread bindings channel thread_id
+      parameters:
+      - in: path
+        name: channel
+        required: true
+        schema:
+          type: string
+        description: Path parameter channel.
+      - in: path
+        name: thread_id
+        required: true
+        schema:
+          type: string
+        description: Path parameter thread_id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/validate:
+    post:
+      tags:
+      - Channels
+      operationId: postChannelsValidate
+      summary: Validate a channel configuration
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/channels/{name}:
+    put:
+      tags:
+      - Channels
+      operationId: putChannelsName
+      summary: Put channels name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Channels
+      operationId: deleteChannelsName
+      summary: Delete channels name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/config:
+    get:
+      tags:
+      - Config
+      operationId: getConfig
+      summary: Get the effective operator configuration
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/durable-facts:
+    get:
+      tags:
+      - Control Plane
+      operationId: getDurableFacts
+      summary: Get durable facts
+      parameters:
+      - in: query
+        name: view
+        schema:
+          type: string
+          enum:
+          - operator
+          - context
+          - config
+        description: Select the typed view projection to return.
+      - in: query
+        name: fact_class
+        schema:
+          type: string
+        description: Filter by DurableFact class.
+      - in: query
+        name: namespace
+        schema:
+          type: string
+        description: Filter by namespace.
+      - in: query
+        name: scope_key
+        schema:
+          type: string
+        description: Filter by scope key.
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: Case-insensitive search over durable fact fields.
+      - in: query
+        name: review_required
+        schema:
+          type: boolean
+        description: Filter by review backlog state.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/config/credentials:
+    get:
+      tags:
+      - Config
+      operationId: getConfigCredentials
+      summary: Get effective config credential placeholders
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/config/preview:
+    post:
+      tags:
+      - Config
+      operationId: postConfigPreview
+      summary: Preview a config mutation without saving it
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/config/validate:
+    post:
+      tags:
+      - Config
+      operationId: postConfigValidate
+      summary: Validate a config document before saving
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/config/{section}:
+    get:
+      tags:
+      - Config
+      operationId: getConfigSection
+      summary: Get config section
+      parameters:
+      - in: path
+        name: section
+        required: true
+        schema:
+          type: string
+        description: Path parameter section.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenValue'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    put:
+      tags:
+      - Config
+      operationId: putConfigSection
+      summary: Put config section
+      parameters:
+      - in: path
+        name: section
+        required: true
+        schema:
+          type: string
+        description: Path parameter section.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenValue'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/controlplane/status:
+    get:
+      tags:
+      - Control Plane
+      operationId: getControlplaneStatus
+      summary: Get controlplane status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/cron/jobs:
+    get:
+      tags:
+      - Automation
+      operationId: getCronJobs
+      summary: Get cron jobs
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Automation
+      operationId: postCronJobs
+      summary: Post cron jobs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/cron/jobs/{id}:
+    get:
+      tags:
+      - Automation
+      operationId: getCronJobsId
+      summary: Get cron jobs id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    patch:
+      tags:
+      - Automation
+      operationId: patchCronJobsId
+      summary: Patch cron jobs id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Automation
+      operationId: deleteCronJobsId
+      summary: Delete cron jobs id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/cron/jobs/{id}/run:
+    post:
+      tags:
+      - Automation
+      operationId: postCronJobsIdRun
+      summary: Post cron jobs id run
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '202':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/cron/status:
+    get:
+      tags:
+      - Automation
+      operationId: getCronStatus
+      summary: Get cron status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices:
+    get:
+      tags:
+      - Devices
+      operationId: getDevices
+      summary: Get devices
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/pair:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesPair
+      summary: Post devices pair
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/pair/approve:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesPairApprove
+      summary: Post devices pair approve
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/pair/reject:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesPairReject
+      summary: Post devices pair reject
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/{id}/revoke:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesIdRevoke
+      summary: Post devices id revoke
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/{id}/tokens/revoke:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesIdTokensRevoke
+      summary: Post devices id tokens revoke
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/{id}/tokens/rotate:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesIdTokensRotate
+      summary: Post devices id tokens rotate
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/devices/{id}/trust:
+    post:
+      tags:
+      - Devices
+      operationId: postDevicesIdTrust
+      summary: Post devices id trust
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/discovery/peers:
+    get:
+      tags:
+      - Discovery
+      operationId: getDiscoveryPeers
+      summary: Get discovery peers
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/discovery/status:
+    get:
+      tags:
+      - Discovery
+      operationId: getDiscoveryStatus
+      summary: Get discovery status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/evals/run:
+    post:
+      tags:
+      - Quality
+      operationId: postEvalsRun
+      summary: Run an evaluation suite
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/evals/suites:
+    get:
+      tags:
+      - Quality
+      operationId: getEvalsSuites
+      summary: List built-in evaluation suites
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/extensions:
+    get:
+      tags:
+      - Core
+      operationId: getExtensions
+      summary: Get runtime extension inventory
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/adapters:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceAdapters
+      summary: Get governance adapters
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/deliveries:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceDeliveries
+      summary: Get governance deliveries
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/deliveries/redrive:
+    post:
+      tags:
+      - Governance
+      operationId: postGovernanceDeliveriesRedrive
+      summary: Post governance deliveries redrive
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/deliveries/stats:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceDeliveriesStats
+      summary: Get governance deliveries stats
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/deliveries/{id}:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceDeliveriesId
+      summary: Get governance deliveries id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/deliveries/{id}/redrive:
+    post:
+      tags:
+      - Governance
+      operationId: postGovernanceDeliveriesIdRedrive
+      summary: Post governance deliveries id redrive
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/events:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceEvents
+      summary: Get governance events
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/governance/health:
+    get:
+      tags:
+      - Governance
+      operationId: getGovernanceHealth
+      summary: Get governance health
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/heartbeat:
+    get:
+      tags:
+      - Core
+      operationId: getHeartbeat
+      summary: Get heartbeat
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/helpers/reclaim:
+    post:
+      tags:
+      - Helpers
+      operationId: postHelpersReclaim
+      summary: Post helpers reclaim
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HelperReclaimRequest'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/helpers/status:
+    get:
+      tags:
+      - Helpers
+      operationId: getHelpersStatus
+      summary: Get helpers status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks:
+    get:
+      tags:
+      - Hooks
+      operationId: getHooks
+      summary: Get hooks
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Hooks
+      operationId: postHooks
+      summary: Post hooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks/events:
+    get:
+      tags:
+      - Hooks
+      operationId: getHooksEvents
+      summary: Get hooks events
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks/{id}:
+    patch:
+      tags:
+      - Hooks
+      operationId: patchHooksId
+      summary: Patch hooks id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Hooks
+      operationId: deleteHooksId
+      summary: Delete hooks id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks/{id}/fire:
+    post:
+      tags:
+      - Hooks
+      operationId: postHooksIdFire
+      summary: Post hooks id fire
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks/{id}/replay:
+    post:
+      tags:
+      - Hooks
+      operationId: postHooksIdReplay
+      summary: Post hooks id replay
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/hooks/{id}/results:
+    get:
+      tags:
+      - Hooks
+      operationId: getHooksIdResults
+      summary: Get hooks id results
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/instances:
+    get:
+      tags:
+      - Core
+      operationId: getInstances
+      summary: Get instances
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/knowledge/search:
+    get:
+      tags:
+      - Knowledge
+      operationId: getKnowledgeSearch
+      summary: Get knowledge search
+      parameters:
+      - in: query
+        name: q
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: source_id
+        schema:
+          type: string
+      - in: query
+        name: locale
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/knowledge/sources:
+    get:
+      tags:
+      - Knowledge
+      operationId: getKnowledgeSources
+      summary: Get knowledge sources
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Knowledge
+      operationId: postKnowledgeSources
+      summary: Post knowledge sources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/knowledge/sources/{id}:
+    get:
+      tags:
+      - Knowledge
+      operationId: getKnowledgeSourcesId
+      summary: Get knowledge sources id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    patch:
+      tags:
+      - Knowledge
+      operationId: patchKnowledgeSourcesId
+      summary: Patch knowledge sources id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Knowledge
+      operationId: deleteKnowledgeSourcesId
+      summary: Delete knowledge sources id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/knowledge/sources/{id}/sync:
+    post:
+      tags:
+      - Knowledge
+      operationId: postKnowledgeSourcesIdSync
+      summary: Post knowledge sources id sync
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/metrics:
+    get:
+      tags:
+      - Diagnostics
+      operationId: getMetrics
+      summary: Scrape Prometheus metrics
+      security: []
+      responses:
+        '200':
+          description: Prometheus metrics payload.
+          content:
+            text/plain:
+              schema:
+                type: string
+  /operator/models:
+    get:
+      tags:
+      - Models
+      operationId: getModels
+      summary: List configured model providers
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Models
+      operationId: postModels
+      summary: Post models
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/models/router:
+    get:
+      tags:
+      - Models
+      operationId: getModelsRouter
+      summary: Get effective model router profiles
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/models/test-chat:
+    post:
+      tags:
+      - Models
+      operationId: postModelsTestChat
+      summary: Send a test chat through a provider definition
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/models/validate:
+    post:
+      tags:
+      - Models
+      operationId: postModelsValidate
+      summary: Validate a model provider definition
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/models/{name}:
+    put:
+      tags:
+      - Models
+      operationId: putModelsName
+      summary: Put models name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Models
+      operationId: deleteModelsName
+      summary: Delete models name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/nodes:
+    get:
+      tags:
+      - Core
+      operationId: getNodes
+      summary: Get nodes
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/nodes/{id}:
+    get:
+      tags:
+      - Core
+      operationId: getNodesId
+      summary: Get nodes id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/pairing:
+    get:
+      tags:
+      - Pairing
+      operationId: getPairing
+      summary: Get pairing
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/pairing/initiate:
+    post:
+      tags:
+      - Pairing
+      operationId: postPairingInitiate
+      summary: Post pairing initiate
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/pairing/verify:
+    post:
+      tags:
+      - Pairing
+      operationId: postPairingVerify
+      summary: Post pairing verify
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/pairing/{channel}/{user_id}:
+    delete:
+      tags:
+      - Pairing
+      operationId: deletePairingChannelUserId
+      summary: Delete pairing channel user_id
+      parameters:
+      - in: path
+        name: channel
+        required: true
+        schema:
+          type: string
+        description: Path parameter channel.
+      - in: path
+        name: user_id
+        required: true
+        schema:
+          type: string
+        description: Path parameter user_id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/plugins:
+    get:
+      tags:
+      - Plugins
+      operationId: getPlugins
+      summary: Get plugins
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Plugins
+      operationId: postPlugins
+      summary: Post plugins
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PluginInstallRequest'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/plugins/{name}:
+    get:
+      tags:
+      - Plugins
+      operationId: getPluginsName
+      summary: Get plugins name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Plugins
+      operationId: deletePluginsName
+      summary: Delete plugins name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/plugins/{name}/disable:
+    post:
+      tags:
+      - Plugins
+      operationId: postPluginsNameDisable
+      summary: Post plugins name disable
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/plugins/{name}/enable:
+    post:
+      tags:
+      - Plugins
+      operationId: postPluginsNameEnable
+      summary: Post plugins name enable
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/policy/engines:
+    get:
+      tags:
+      - Control Plane
+      operationId: getPolicyEngines
+      summary: Get policy engines
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/quality/release-readiness:
+    get:
+      tags:
+      - Quality
+      operationId: getQualityReleaseReadiness
+      summary: Get release readiness assessment
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 2000
+      - in: query
+        name: min_terminal_runs
+        schema:
+          type: integer
+          minimum: 0
+      - in: query
+        name: min_task_success_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      - in: query
+        name: max_false_success_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      - in: query
+        name: max_verification_failure_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      - in: query
+        name: max_fallback_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      - in: query
+        name: max_visual_fallback_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      - in: query
+        name: min_profile_hit_rate
+        schema:
+          type: number
+          minimum: 0
+          maximum: 1
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/quality/summary:
+    get:
+      tags:
+      - Quality
+      operationId: getQualitySummary
+      summary: Get runtime quality summary
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 2000
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/sandbox/exec:
+    post:
+      tags:
+      - Diagnostics
+      operationId: postSandboxExec
+      summary: Post sandbox exec
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/sandbox/status:
+    get:
+      tags:
+      - Diagnostics
+      operationId: getSandboxStatus
+      summary: Get sandbox status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/setup/catalog:
+    get:
+      tags:
+      - Setup
+      operationId: getSetupCatalog
+      summary: Get setup catalog
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/setup/status:
+    get:
+      tags:
+      - Setup
+      operationId: getSetupStatus
+      summary: Get setup status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills:
+    get:
+      tags:
+      - Skills
+      operationId: getSkills
+      summary: Get skills
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/catalog:
+    get:
+      tags:
+      - Skills
+      operationId: getSkillsCatalog
+      summary: Get skills catalog
+      parameters:
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: Free-text catalog filter used by the console and CLI.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/catalog/{id}:
+    get:
+      tags:
+      - Skills
+      operationId: getSkillsCatalogId
+      summary: Get skills catalog id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/install:
+    post:
+      tags:
+      - Skills
+      operationId: postSkillsInstall
+      summary: Post skills install
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/preflight:
+    post:
+      tags:
+      - Skills
+      operationId: postSkillsPreflight
+      summary: Post skills preflight
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/{name}:
+    get:
+      tags:
+      - Skills
+      operationId: getSkillsName
+      summary: Get skills name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Skills
+      operationId: deleteSkillsName
+      summary: Delete skills name
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/skills/{name}/config:
+    put:
+      tags:
+      - Skills
+      operationId: putSkillsNameConfig
+      summary: Put skills name config
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+        description: Path parameter name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/status:
+    get:
+      tags:
+      - Core
+      operationId: getStatus
+      summary: Get operator status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/tools/test:
+    post:
+      tags:
+      - Tools
+      operationId: postToolsTest
+      summary: Run a tool test through the operator surface
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/usage/daily:
+    get:
+      tags:
+      - Usage
+      operationId: getUsageDaily
+      summary: Get usage daily
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: until
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: model
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/usage/providers:
+    get:
+      tags:
+      - Usage
+      operationId: getUsageProviders
+      summary: Get usage providers
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: until
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: model
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/usage/session/{session_id}:
+    get:
+      tags:
+      - Usage
+      operationId: getUsageSessionSessionId
+      summary: Get usage session session_id
+      parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          type: string
+        description: Path parameter session_id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/usage/summary:
+    get:
+      tags:
+      - Usage
+      operationId: getUsageSummary
+      summary: Get usage summary
+      parameters:
+      - in: query
+        name: since
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: until
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: model
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/wakeup/triggers:
+    get:
+      tags:
+      - Automation
+      operationId: getWakeupTriggers
+      summary: Get wakeup triggers
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Automation
+      operationId: postWakeupTriggers
+      summary: Post wakeup triggers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/wakeup/triggers/{id}:
+    get:
+      tags:
+      - Automation
+      operationId: getWakeupTriggersId
+      summary: Get wakeup triggers id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    patch:
+      tags:
+      - Automation
+      operationId: patchWakeupTriggersId
+      summary: Patch wakeup triggers id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Automation
+      operationId: deleteWakeupTriggersId
+      summary: Delete wakeup triggers id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/watch/items:
+    get:
+      tags:
+      - Automation
+      operationId: getWatchItems
+      summary: Get watch items
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    post:
+      tags:
+      - Automation
+      operationId: postWatchItems
+      summary: Post watch items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/watch/items/{id}:
+    get:
+      tags:
+      - Automation
+      operationId: getWatchItemsId
+      summary: Get watch items id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    patch:
+      tags:
+      - Automation
+      operationId: patchWatchItemsId
+      summary: Patch watch items id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Automation
+      operationId: deleteWatchItemsId
+      summary: Delete watch items id
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/watch/items/{id}/run:
+    post:
+      tags:
+      - Automation
+      operationId: postWatchItemsIdRun
+      summary: Post watch items id run
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Path parameter id.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenObject'
+      responses:
+        '202':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/watch/status:
+    get:
+      tags:
+      - Automation
+      operationId: getWatchStatus
+      summary: Get watch status
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/wire/entries:
+    get:
+      tags:
+      - Diagnostics
+      operationId: getWireEntries
+      summary: Get wire entries
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountedItemsResponse'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+    delete:
+      tags:
+      - Diagnostics
+      operationId: deleteWireEntries
+      summary: Delete wire entries
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+  /operator/wire/stats:
+    get:
+      tags:
+      - Diagnostics
+      operationId: getWireStats
+      summary: Get wire stats
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenObject'
+        '400':
+          $ref: '#/components/responses/Error'
+        '401':
+          $ref: '#/components/responses/Error'
+        '403':
+          $ref: '#/components/responses/Error'
+        '404':
+          $ref: '#/components/responses/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API token
+  responses:
+    Error:
+      description: Error response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      additionalProperties: true
+    OpenObject:
+      type: object
+      description: Open JSON object used for faster-moving operator payloads.
+      additionalProperties: true
+    OpenValue:
+      description: Any JSON value accepted or returned by operator config mutation endpoints.
+      oneOf:
+      - type: object
+        additionalProperties: true
+      - type: array
+        items:
+          $ref: '#/components/schemas/OpenValue'
+      - type: string
+      - type: integer
+      - type: number
+      - type: boolean
+      - type: 'null'
+    CountedItemsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenValue'
+        count:
+          type: integer
+      additionalProperties: true
+    PluginInstallRequest:
+      type: object
+      properties:
+        source:
+          type: string
+      required:
+      - source
+      additionalProperties: true
+    HelperReclaimRequest:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+      - name
+      additionalProperties: true

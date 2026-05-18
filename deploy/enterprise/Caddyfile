@@ -1,0 +1,25 @@
+{
+	email {$TLS_EMAIL}
+	admin off
+}
+
+{$HOPCLAW_PUBLIC_HOST} {
+	encode zstd gzip
+
+	request_body {
+		max_size 10MB
+	}
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	reverse_proxy hopclaw:16280
+
+	log {
+		output stdout
+		format console
+	}
+}

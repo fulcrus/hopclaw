@@ -1,0 +1,23 @@
+{
+  "delivery_id": "gdel_demo_retry_001",
+  "adapter_name": "audit-hub",
+  "delivery_status": "pending",
+  "delivery_attempts": 3,
+  "delivery_max_attempts": 5,
+  "governance_kind": "security_event",
+  "source_event_id": "evt_security_003",
+  "source_event_type": "security.risk_detected",
+  "run_id": "run_demo_retry_001",
+  "session_id": "sess_demo_ops_002",
+  "event_id": "bus_evt_retry_001",
+  "event_time": "2026-03-19T08:15:00Z",
+  "event_type": "governance.delivery.retry_scheduled",
+  "next_attempt_at": "2026-03-19T08:20:00Z",
+  "error": "incident webhook timed out after 30 seconds",
+  "_hook_context": {
+    "session_id": "sess_demo_ops_002",
+    "run_id": "run_demo_retry_001",
+    "phase": "post",
+    "trigger_time": "2026-03-19T08:15:00Z"
+  }
+}

@@ -1,0 +1,18 @@
+name: sample-echo-channel
+version: "0.1.0"
+description: Minimal stdio channel plugin template for HopClaw (Go variant)
+author: HopClaw Example
+
+channels:
+  sample-echo:
+    type: stdio
+    command: "go"
+    args:
+      - "run"
+      - "./go"
+    capabilities:
+      - send
+    config:
+      channel_id: "sample-echo"
+      echo_prefix: "Echo"
+    max_restarts: 5

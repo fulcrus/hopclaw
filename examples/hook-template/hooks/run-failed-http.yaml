@@ -1,0 +1,9 @@
+hooks:
+  - name: sample-run-failed-http
+    enabled: true
+    trigger: run.failed
+    phase: error
+    kind: http
+    async: true
+    timeout: 10
+    url: http://127.0.0.1:18084/hooks/run-failed

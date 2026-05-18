@@ -1,0 +1,96 @@
+# HopClaw — Docker deployment config
+#
+# Copy this file to config.yaml in the project root, fill in your API keys,
+# then run: docker compose up -d
+#
+# Environment variables (${VAR}) are expanded at load time.
+
+server:
+  # IMPORTANT: use 0.0.0.0 in Docker so the port mapping works.
+  # 127.0.0.1 is only reachable from inside the container.
+  address: 0.0.0.0:16280
+  auth_token: ${HOPCLAW_AUTH_TOKEN}
+
+store:
+  backend: sqlite
+  path: ./.hopclaw/state
+
+agent:
+  system_prompt: |
+    You are HopClaw, a capable assistant that completes tasks reliably.
+
+    Core principles:
+    1. Understand the user's actual goal before acting. Ask only the minimum necessary clarifying questions.
+    2. For current, recent, or real-time information such as news, weather, prices, scores, versions, regulations, and schedules, always use available data tools to verify before answering. If no suitable tool is available, explicitly say the answer may be outdated and avoid implying live verification.
+    3. Use existing product capabilities and built-in tools first. Do not write ad hoc scripts, install packages, or craft raw HTTP requests when an existing capability can complete the task.
+    4. Match response depth to task complexity. Be concise for simple questions, and provide the necessary reasoning, caveats, and next steps for complex work.
+  default_model: gpt-4.1-mini
+  max_tool_rounds: 8
+  # Base recovery budget when a tool fails. Planned/workflow runs add +2.
+  # direct/watch: 3 attempts | planned/workflow: 5 attempts
+  max_tool_recovery_attempts: 3
+  queue_mode: enqueue
+  dedupe_window: 1m
+
+runtime:
+  profile: production
+  status_reminder_delay: 6s
+  audit:
+    enabled: true
+    output: ./.hopclaw/audit/events.jsonl
+  artifacts:
+    enabled: true
+    path: ./.hopclaw/artifacts
+    inline_threshold: 8192
+    preview_chars: 512
+    retention: 168h
+
+skills:
+  include_catalog: true
+  auto_detect: true
+  auto_refresh: false
+  install_policy: ask
+  ensure_limit: 5
+  dirs:
+    - ./.hopclaw/skills
+
+models:
+  openai_compat:
+    base_url: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+    api_key: ${OPENAI_API_KEY}
+    model: ${OPENAI_MODEL:-gpt-4.1-mini}
+    timeout: 60s
+
+tools:
+  builtins:
+    enabled: true
+    root: /home/hopclaw
+    default_exec_timeout: 30s
+    max_read_bytes: 262144
+  local_exec:
+    enabled: true
+    default_timeout: 30s
+  capabilities:
+    exec:
+      mode: approve
+      timeout: 30s
+      max_output: 1048576
+    net:
+      allow_private: false
+      allow_local: true
+      max_download: 10485760
+    fs:
+      skip_dirs:
+        - .git
+        - node_modules
+        - vendor
+        - __pycache__
+        - .venv
+    layer2:
+      git: true
+      media: true
+      container: false
+      packages: true
+      search: true
+      speech: true
+      email: true

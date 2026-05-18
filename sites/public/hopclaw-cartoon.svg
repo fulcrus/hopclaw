@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="512" cy="540" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1C0E18"/>
+      <stop offset="0.45" stop-color="#0C1020"/>
+      <stop offset="1" stop-color="#060A15"/>
+    </radialGradient>
+
+    <linearGradient id="lobster" x1="400" y1="200" x2="640" y2="750" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF5B30"/>
+      <stop offset="0.5" stop-color="#FF2E14"/>
+      <stop offset="1" stop-color="#B80E0B"/>
+    </linearGradient>
+
+    <radialGradient id="shine" cx="475" cy="440" r="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFA060" stop-opacity="0.42"/>
+      <stop offset="0.5" stop-color="#FF6030" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#FF2E14" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="hotEdge" x1="540" y1="380" x2="660" y2="660" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB870"/>
+      <stop offset="0.5" stop-color="#FFCF68"/>
+      <stop offset="1" stop-color="#FFF5CC"/>
+    </linearGradient>
+
+    <radialGradient id="ringG" cx="512" cy="808" r="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF6C4"/>
+      <stop offset="0.28" stop-color="#FFD86B"/>
+      <stop offset="0.62" stop-color="#FF7A1A"/>
+      <stop offset="1" stop-color="#FF4A0A" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <filter id="glowSm" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- Stars -->
+  <g opacity="0.7">
+    <circle cx="120" cy="140" r="2.5" fill="#D8E4FF"/>
+    <circle cx="860" cy="150" r="2.2" fill="#D8E4FF"/>
+    <circle cx="910" cy="320" r="2.8" fill="#D8E4FF"/>
+    <circle cx="170" cy="400" r="2" fill="#D8E4FF"/>
+    <circle cx="780" cy="220" r="1.8" fill="#D8E4FF"/>
+    <circle cx="310" cy="90" r="2" fill="#D8E4FF"/>
+    <circle cx="85" cy="260" r="1.6" fill="#D8E4FF"/>
+    <circle cx="940" cy="460" r="1.5" fill="#D8E4FF"/>
+    <circle cx="830" cy="700" r="2" fill="#FF9050" opacity="0.5"/>
+    <circle cx="270" cy="210" r="2" fill="#FF9050" opacity="0.5"/>
+    <circle cx="200" cy="620" r="2.2" fill="#FF9050" opacity="0.5"/>
+  </g>
+
+  <!-- Ring glow -->
+  <g filter="url(#glow)" opacity="0.92">
+    <ellipse cx="512" cy="808" rx="260" ry="65" fill="url(#ringG)"/>
+    <ellipse cx="512" cy="808" rx="208" ry="40" stroke="#FF8227" stroke-width="9" fill="none"/>
+    <ellipse cx="512" cy="808" rx="312" ry="86" stroke="#FF5A1A" stroke-opacity="0.4" stroke-width="5" fill="none"/>
+  </g>
+
+  <!-- Central beam -->
+  <line x1="512" y1="802" x2="512" y2="665" stroke="#FFCF68" stroke-width="16" stroke-linecap="round" filter="url(#glow)" opacity="0.8"/>
+
+  <!-- Energy trails -->
+  <g opacity="0.7" filter="url(#glowSm)">
+    <path d="M285 720 C225 650 218 580 248 518" stroke="#FF6A1F" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M739 730 C799 668 812 598 788 538" stroke="#FF6A1F" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M248 762 C190 725 172 658 196 594" stroke="#FF5518" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.5"/>
+    <path d="M776 770 C838 738 856 672 838 608" stroke="#FF5518" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.5"/>
+  </g>
+
+  <!-- ===== LOBSTER (slight dynamic tilt) ===== -->
+  <g transform="translate(512 470) rotate(5) translate(-512 -470)">
+
+    <!-- === TAIL FAN (3 puffy lobes) === -->
+    <circle cx="488" cy="170" r="26" fill="url(#lobster)"/>
+    <circle cx="512" cy="156" r="30" fill="url(#lobster)"/>
+    <circle cx="536" cy="170" r="26" fill="url(#lobster)"/>
+    <!-- Fan highlight -->
+    <ellipse cx="508" cy="155" rx="10" ry="12" fill="white" opacity="0.08"/>
+
+    <!-- === TAIL (5 crescent segments, widening downward) === -->
+    <ellipse cx="512" cy="210" rx="36" ry="18" fill="url(#lobster)"/>
+    <ellipse cx="512" cy="246" rx="44" ry="20" fill="url(#lobster)"/>
+    <ellipse cx="512" cy="284" rx="54" ry="22" fill="url(#lobster)"/>
+    <ellipse cx="512" cy="324" rx="64" ry="24" fill="url(#lobster)"/>
+    <ellipse cx="512" cy="367" rx="76" ry="26" fill="url(#lobster)"/>
+
+    <!-- Segment groove lines -->
+    <g stroke="#901810" stroke-width="2" fill="none" opacity="0.4">
+      <path d="M478 220 Q512 226 546 220"/>
+      <path d="M470 257 Q512 263 554 257"/>
+      <path d="M462 296 Q512 302 562 296"/>
+      <path d="M452 337 Q512 343 572 337"/>
+      <path d="M440 380 Q512 386 584 380"/>
+    </g>
+
+    <!-- Tail left highlight -->
+    <path d="M492 185 Q490 270 488 360" stroke="#FFB868" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.22"/>
+
+    <!-- === SIDE FINS === -->
+    <path d="M378 430 C342 398 328 365 335 338 C358 352 378 380 396 418Z" fill="url(#lobster)"/>
+    <path d="M646 430 C682 398 696 365 689 338 C666 352 646 380 628 418Z" fill="url(#lobster)"/>
+    <path d="M396 472 C362 442 348 415 354 392 C374 406 392 432 408 464Z" fill="url(#lobster)"/>
+    <path d="M628 472 C662 442 676 415 670 392 C650 406 632 432 616 464Z" fill="url(#lobster)"/>
+
+    <!-- === BODY (egg shape, taller than wide) === -->
+    <ellipse cx="512" cy="520" rx="135" ry="165" fill="url(#lobster)"/>
+
+    <!-- Body 3D shine -->
+    <ellipse cx="478" cy="448" rx="68" ry="90" fill="url(#shine)"/>
+    <ellipse cx="465" cy="425" rx="24" ry="12" fill="white" opacity="0.1" transform="rotate(-20 465 425)"/>
+
+    <!-- Right edge hot glow -->
+    <path d="M600 400 Q645 490 635 590 Q618 665 578 698" stroke="url(#hotEdge)" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.25"/>
+
+    <!-- === LEFT ARM + CLAW === -->
+    <path d="M382 518 C318 555 255 615 210 668" stroke="url(#lobster)" stroke-width="36" stroke-linecap="round" fill="none"/>
+    <!-- Arm highlight -->
+    <path d="M378 512 C316 548 256 606 214 656" stroke="#FFB060" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.2"/>
+
+    <!-- Left claw (two ellipse jaws + gap) -->
+    <ellipse cx="165" cy="634" rx="62" ry="30" transform="rotate(-18 165 634)" fill="url(#lobster)"/>
+    <ellipse cx="172" cy="706" rx="56" ry="28" transform="rotate(18 172 706)" fill="url(#lobster)"/>
+    <!-- Claw inner gap -->
+    <path d="M212 666 C196 656 172 650 154 658" stroke="#080610" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.48"/>
+    <!-- Claw highlight -->
+    <path d="M138 644 C156 632 178 630 196 640" stroke="#FFD068" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- === RIGHT ARM + CLAW === -->
+    <path d="M642 518 C706 555 769 615 814 668" stroke="url(#lobster)" stroke-width="36" stroke-linecap="round" fill="none"/>
+    <!-- Arm highlight -->
+    <path d="M646 512 C708 548 768 606 810 656" stroke="#FFB060" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.2"/>
+
+    <!-- Right claw -->
+    <ellipse cx="859" cy="634" rx="62" ry="30" transform="rotate(18 859 634)" fill="url(#lobster)"/>
+    <ellipse cx="852" cy="706" rx="56" ry="28" transform="rotate(-18 852 706)" fill="url(#lobster)"/>
+    <!-- Claw inner gap -->
+    <path d="M812 666 C828 656 852 650 870 658" stroke="#080610" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.48"/>
+    <!-- Claw highlight -->
+    <path d="M886 644 C868 632 846 630 828 640" stroke="#FFD068" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- === EYES (small bright dots) === -->
+    <g filter="url(#glowSm)">
+      <circle cx="478" cy="545" r="14" fill="#FFF4D0"/>
+      <circle cx="546" cy="545" r="14" fill="#FFF4D0"/>
+    </g>
+    <circle cx="480" cy="548" r="5" fill="#0C0A14"/>
+    <circle cx="548" cy="548" r="5" fill="#0C0A14"/>
+    <circle cx="475" cy="540" r="3.5" fill="white" opacity="0.9"/>
+    <circle cx="543" cy="540" r="3.5" fill="white" opacity="0.9"/>
+
+    <!-- === WHISKERS === -->
+    <path d="M486 662 C470 702 458 740 454 776" stroke="#FF7A30" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M538 662 C554 702 566 740 570 776" stroke="#FF7A30" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+    <!-- === LEGS === -->
+    <g stroke="url(#lobster)" stroke-linecap="round" fill="none">
+      <path d="M438 650 C422 676 408 698 398 714" stroke-width="9"/>
+      <path d="M586 650 C602 676 616 698 626 714" stroke-width="9"/>
+      <path d="M458 665 C446 694 438 716 432 732" stroke-width="7"/>
+      <path d="M566 665 C578 694 586 716 592 732" stroke-width="7"/>
+    </g>
+
+  </g>
+
+  <!-- Sparkle particles -->
+  <g filter="url(#glowSm)" opacity="0.75">
+    <circle cx="335" cy="488" r="2.5" fill="#FFB850"/>
+    <circle cx="698" cy="508" r="2.2" fill="#FFB850"/>
+    <circle cx="255" cy="618" r="2" fill="#FFDD88"/>
+    <circle cx="778" cy="638" r="2.5" fill="#FFDD88"/>
+    <circle cx="392" cy="762" r="2.8" fill="#FF9048"/>
+    <circle cx="638" cy="742" r="2.5" fill="#FF9048"/>
+    <circle cx="180" cy="720" r="1.8" fill="#FFD068"/>
+    <circle cx="848" cy="728" r="2" fill="#FFD068"/>
+  </g>
+</svg>

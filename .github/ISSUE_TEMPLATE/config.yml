@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Latest releases
+    url: https://github.com/fulcrus/hopclaw/releases
+    about: Download the current binary bundles and read the latest release notes first.
+  - name: HopClaw docs and quick start
+    url: https://hopclaw.com/docs
+    about: Check the install path, runtime boundary, and operator workflow before filing.
+  - name: Contribution guide
+    url: https://github.com/fulcrus/hopclaw/blob/main/CONTRIBUTING.md
+    about: Start here if you want to help with docs, repros, onboarding review, integrations, or code.
+  - name: Private security report
+    url: https://github.com/fulcrus/hopclaw/security/policy
+    about: Report vulnerabilities privately according to SECURITY.md. Do not open a public issue.

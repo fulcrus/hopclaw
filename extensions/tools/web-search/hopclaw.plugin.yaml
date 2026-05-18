@@ -1,0 +1,4 @@
+name: web-search
+version: "1.0.0"
+description: Bundled skill for web research workflows
+skills_dir: .

@@ -1,0 +1,12 @@
+name: groq
+version: "1.0.0"
+description: Groq model provider bundle
+
+providers:
+  groq:
+    api: openai-completions
+    base_url: https://api.groq.com/openai/v1
+    default_model: llama-3.3-70b-versatile
+    api_key_hint: Set GROQ_API_KEY environment variable
+    env_vars:
+      - GROQ_API_KEY

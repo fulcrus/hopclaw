@@ -1,0 +1,11 @@
+name: hello-channel
+version: "1.0.0"
+description: Example Level 0 channel plugin built with the HopClaw typed SDK.
+
+channels:
+  hello-channel:
+    type: stdio
+    command: ./hello-channel
+    capabilities:
+      - connect
+      - send

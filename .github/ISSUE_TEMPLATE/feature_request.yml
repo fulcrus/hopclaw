@@ -1,0 +1,53 @@
+name: Feature request
+description: Propose a new capability or product improvement for HopClaw
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please describe the user problem first, then the proposed solution.
+        Requests grounded in runtime behavior, operator workflow, safety, or release management are easier to evaluate.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What user or operator pain point is not handled well today?
+      placeholder: It is hard to roll out beta releases without exposing every operator to prerelease builds.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the feature or design you want.
+      placeholder: Add channel-specific release rollout controls with per-version dismissal and a signed manifest.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What are you doing today instead?
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and affected areas
+      description: CLI, config, gateway, runtime, channels, browser/desktop, docs, release tooling, etc.
+
+  - type: textarea
+    id: success
+    attributes:
+      label: What would success look like?
+      description: Describe the outcome, not only the implementation.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Links, mockups, related issues, or design constraints.

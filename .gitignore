@@ -1,0 +1,64 @@
+.DS_Store
+.idea/
+.vscode/
+
+.hopclaw/
+.openclaw/
+artifacts/
+state/
+tmp/
+dist/
+bin/
+coverage.out
+.coverage.out
+config.local.yaml
+*.local.yaml
+/config.yaml
+/hopclaw
+.env.test
+.gocache/
+.pycache/
+*.pyc
+*.pyo
+
+# Local planning and assistant artifacts
+.claude/
+.codex/
+.plan_logs/
+.plan_tracker.md
+DISCOVERIES.md
+
+# Local troubleshooting scratch files
+disk_check.log
+example-screenshot.png
+get_ip*.sh
+
+# Secrets and certificate material
+*.pem
+*.key
+*.crt
+*.cer
+*.csr
+*.der
+*.p12
+*.pfx
+*.p7b
+*.p7c
+*.jks
+*.keystore
+
+# Build and module caches
+.gomodcache/
+.tmp/
+.tmp-gocache-test/
+docs/tmp/
+
+# Browser/test artifacts
+browser_snapshot*
+screenshot_*
+form_*.json
+
+# Downloaded feeds and generated content
+*.xml
+ai_llm_news_summary.md
+button_click_strategy.py

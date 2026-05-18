@@ -1,0 +1,179 @@
+/* ---------------------------------------------------------------------------
+   Usage View
+   --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   Summary Cards Row
+   --------------------------------------------------------------------------- */
+.hc-usage-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.hc-usage-card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.hc-usage-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink2);
+  margin-bottom: 6px;
+}
+
+.hc-usage-card-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.hc-usage-card-change {
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+.hc-usage-card-change.positive { color: var(--danger); }
+.hc-usage-card-change.negative { color: var(--success); }
+.hc-usage-card-change.neutral { color: var(--ink3); }
+
+/* ---------------------------------------------------------------------------
+   Chart Container
+   --------------------------------------------------------------------------- */
+.hc-chart-container {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hc-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.hc-chart-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hc-chart-controls {
+  display: flex;
+  gap: 6px;
+}
+
+.hc-chart-svg {
+  width: 100%;
+  overflow: visible;
+}
+
+/* ---------------------------------------------------------------------------
+   Bar Chart Styling (SVG)
+   --------------------------------------------------------------------------- */
+.hc-chart-bar {
+  transition: opacity var(--transition);
+  cursor: pointer;
+}
+
+.hc-chart-bar:hover {
+  opacity: 0.8;
+}
+
+.hc-chart-label {
+  font-family: var(--font);
+  font-size: 11px;
+  fill: var(--ink2);
+}
+
+.hc-chart-axis {
+  stroke: var(--border-light);
+  stroke-width: 1;
+}
+
+.hc-chart-grid {
+  stroke: var(--border-light);
+  stroke-width: 0.5;
+  stroke-dasharray: 4 4;
+}
+
+.hc-chart-value {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--ink2);
+}
+
+/* ---------------------------------------------------------------------------
+   Session Cost Table
+   --------------------------------------------------------------------------- */
+.hc-usage-table {
+  margin-bottom: 24px;
+}
+
+.hc-usage-table .hc-cost {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.hc-usage-table .hc-tokens {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink2);
+}
+
+/* ---------------------------------------------------------------------------
+   Provider Color Legend
+   --------------------------------------------------------------------------- */
+.hc-usage-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.hc-usage-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ink2);
+}
+
+.hc-usage-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.hc-legend-openai { background: #10a37f; }
+.hc-legend-anthropic { background: #d97706; }
+.hc-legend-google { background: #4285f4; }
+.hc-legend-bedrock { background: #ff9900; }
+.hc-legend-copilot { background: #6366f1; }
+.hc-legend-other { background: var(--ink3); }
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .hc-usage-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hc-chart-container {
+    padding: 12px;
+  }
+}

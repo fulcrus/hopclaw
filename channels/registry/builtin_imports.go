@@ -1,0 +1,26 @@
+package registry
+
+import (
+	_ "github.com/fulcrus/hopclaw/channels/bluebubbles"
+	_ "github.com/fulcrus/hopclaw/channels/discord"
+	_ "github.com/fulcrus/hopclaw/channels/feishu"
+	_ "github.com/fulcrus/hopclaw/channels/googlechat"
+	_ "github.com/fulcrus/hopclaw/channels/imessage"
+	_ "github.com/fulcrus/hopclaw/channels/irc"
+	_ "github.com/fulcrus/hopclaw/channels/line"
+	_ "github.com/fulcrus/hopclaw/channels/matrix"
+	_ "github.com/fulcrus/hopclaw/channels/mattermost"
+	_ "github.com/fulcrus/hopclaw/channels/msteams"
+	_ "github.com/fulcrus/hopclaw/channels/nextcloudtalk"
+	_ "github.com/fulcrus/hopclaw/channels/nostr"
+	_ "github.com/fulcrus/hopclaw/channels/signal"
+	_ "github.com/fulcrus/hopclaw/channels/slack"
+	_ "github.com/fulcrus/hopclaw/channels/synologychat"
+	_ "github.com/fulcrus/hopclaw/channels/telegram"
+	_ "github.com/fulcrus/hopclaw/channels/tlon"
+	_ "github.com/fulcrus/hopclaw/channels/twitch"
+	_ "github.com/fulcrus/hopclaw/channels/webhook"
+	_ "github.com/fulcrus/hopclaw/channels/whatsapp"
+	_ "github.com/fulcrus/hopclaw/channels/zalo"
+	_ "github.com/fulcrus/hopclaw/channels/zalouser"
+)

@@ -1,0 +1,4 @@
+name: code-interpreter
+version: "1.0.0"
+description: Bundled skill for structured code and data analysis
+skills_dir: .

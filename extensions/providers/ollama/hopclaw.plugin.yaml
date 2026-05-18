@@ -1,0 +1,8 @@
+name: ollama
+version: "1.0.0"
+description: Ollama local model provider bundle
+
+providers:
+  ollama:
+    api: openai-completions
+    base_url: http://localhost:11434/v1

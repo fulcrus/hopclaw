@@ -1,0 +1,12 @@
+name: together
+version: "1.0.0"
+description: Together AI model provider bundle
+
+providers:
+  together:
+    api: openai-completions
+    base_url: https://api.together.xyz/v1
+    default_model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+    api_key_hint: Set TOGETHER_API_KEY environment variable
+    env_vars:
+      - TOGETHER_API_KEY

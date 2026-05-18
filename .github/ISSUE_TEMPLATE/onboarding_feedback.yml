@@ -1,0 +1,83 @@
+name: Install / onboarding feedback
+description: Report download, install, setup, or first-run friction in HopClaw
+title: "[Onboarding]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when the main problem is friction in download, install,
+        setup, auth, or first-run workflow.
+
+        If you already have a reproducible runtime failure, crash, or clear
+        regression, use the bug report template instead.
+
+  - type: dropdown
+    id: install_method
+    attributes:
+      label: Install method
+      options:
+        - release binary
+        - install script
+        - go install
+        - source checkout
+        - docker
+        - other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where did friction show up?
+      options:
+        - download
+        - install
+        - onboarding / setup wizard
+        - auth / token setup
+        - first health check
+        - first dashboard run
+        - first bug-report / diagnostics flow
+        - update flow
+        - docs / wording confusion
+        - other
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What felt rough?
+      description: Describe the exact point where the flow became confusing, slow, or fragile.
+      placeholder: The install script worked, but I did not know which token to set before the first dashboard run.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect instead?
+      description: Describe the simpler or clearer path you expected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, architecture, shell, container/runtime details, and anything else that affected the flow.
+      placeholder: Ubuntu 24.04 amd64, bash, release binary install
+
+  - type: textarea
+    id: commands
+    attributes:
+      label: Commands, screenshots, or notes
+      description: Paste exact commands, screenshots, or the wording that caused confusion.
+      render: shell
+
+  - type: checkboxes
+    id: follow_up
+    attributes:
+      label: Follow-up
+      options:
+        - label: I can retest a proposed fix on the same machine later.
+        - label: I am willing to review onboarding or install docs again after changes land.

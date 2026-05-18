@@ -1,0 +1,45 @@
+# Binaries
+bin/
+hopclaw
+openclaw
+hopclaw-browserd
+hopclaw-desktopd
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# CI / docs
+.github/
+docs/
+*.md
+!go.mod
+!go.sum
+!LICENSE
+!NOTICE
+
+# Test / dev artifacts
+*.test
+*.out
+coverage.html
+*.prof
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local state (never bake into image)
+.hopclaw/
+*.yaml
+!config.example.yaml
+sites/
+travel-website/
+*.png
+*.txt

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="78" y1="42" x2="1090" y2="596" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAF6EF" />
+      <stop offset="1" stop-color="#F1E9DA" />
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#15221D" />
+      <stop offset="1" stop-color="#0D1613" />
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="1200" height="630" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#112019" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+
+  <g opacity="0.22">
+    <path d="M0 72H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 144H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 216H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 288H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 360H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 432H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 504H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M0 576H1200" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M80 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M160 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M240 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M320 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M400 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M480 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M560 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M640 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M720 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M800 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M880 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M960 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M1040 0V630" stroke="#112019" stroke-opacity="0.10"/>
+    <path d="M1120 0V630" stroke="#112019" stroke-opacity="0.10"/>
+  </g>
+
+  <circle cx="164" cy="102" r="118" fill="#2F7A6F" fill-opacity="0.08" />
+  <circle cx="1048" cy="112" r="122" fill="#B86634" fill-opacity="0.09" />
+
+  <g filter="url(#shadow)">
+    <rect x="66" y="58" width="1068" height="514" rx="36" fill="rgba(255,253,248,0.56)" stroke="rgba(17,32,25,0.08)"/>
+  </g>
+
+  <rect x="96" y="94" width="74" height="74" rx="22" fill="#112019"/>
+  <path d="M119 117L147 145" stroke="#FFFDF8" stroke-linecap="round" stroke-width="8"/>
+  <path d="M147 117L119 145" stroke="#FFFDF8" stroke-linecap="round" stroke-width="8"/>
+  <circle cx="160" cy="110" r="6" fill="#B86634"/>
+
+  <rect x="188" y="106" width="330" height="28" rx="14" fill="rgba(17,32,25,0.06)"/>
+  <text fill="#5C675F" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.16em">
+    <tspan x="206" y="125">FIRST BUILDERS WANTED</tspan>
+  </text>
+
+  <text fill="#112019" font-family="Inter, Space Grotesk, Arial, sans-serif" font-size="44" font-weight="700" letter-spacing="-0.04em">
+    <tspan x="96" y="222">HopClaw</tspan>
+  </text>
+
+  <text fill="#112019" font-family="Inter, Space Grotesk, Arial, sans-serif" font-size="68" font-weight="700" letter-spacing="-0.06em">
+    <tspan x="96" y="316">Join early.</tspan>
+    <tspan x="96" y="392">Leave your name.</tspan>
+    <tspan x="96" y="468">Help define the runtime.</tspan>
+  </text>
+
+  <text fill="#47524A" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="27" font-weight="500">
+    <tspan x="98" y="520">Go developers, channel builders, skill authors, AI infra engineers,</tspan>
+    <tspan x="98" y="556">and sharp critics can still shape what HopClaw becomes.</tspan>
+  </text>
+
+  <g>
+    <rect x="720" y="126" width="348" height="308" rx="28" fill="url(#panel)"/>
+    <rect x="720.75" y="126.75" width="346.5" height="306.5" rx="27.25" stroke="rgba(255,255,255,0.08)"/>
+    <circle cx="756" cy="158" r="6" fill="#F26B5D"/>
+    <circle cx="780" cy="158" r="6" fill="#E0AE47"/>
+    <circle cx="804" cy="158" r="6" fill="#4AB387"/>
+    <text fill="rgba(246,239,226,0.58)" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="14" letter-spacing="0.12em">
+      <tspan x="823" y="163">BUILDER WINDOW</tspan>
+    </text>
+
+    <text fill="#58C395" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="15">
+      <tspan x="752" y="220">[repo] skeleton is real</tspan>
+      <tspan x="752" y="254">[state] platform still forming</tspan>
+    </text>
+    <text fill="#F6EFE2" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="15">
+      <tspan x="752" y="304">[roles] go · channels · skills</tspan>
+      <tspan x="752" y="338">[roles] infra · docs · testing</tspan>
+    </text>
+    <text fill="#76CCB7" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="15">
+      <tspan x="752" y="388">[cta] github.com/fulcrus/hopclaw</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="720" y="458" width="152" height="42" rx="21" fill="rgba(17,32,25,0.06)" stroke="rgba(17,32,25,0.08)"/>
+    <text fill="#112019" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="0.06em">
+      <tspan x="747" y="485">GO BUILDERS</tspan>
+    </text>
+
+    <rect x="882" y="458" width="186" height="42" rx="21" fill="rgba(184,102,52,0.11)" stroke="rgba(184,102,52,0.18)"/>
+    <text fill="#B86634" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="0.06em">
+      <tspan x="904" y="485">FIRST AI PATHFINDERS</tspan>
+    </text>
+  </g>
+
+  <text fill="#112019" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="0.10em">
+    <tspan x="98" y="603">HOPCLAW.COM</tspan>
+  </text>
+</svg>

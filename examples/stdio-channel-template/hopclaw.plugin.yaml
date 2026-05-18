@@ -1,0 +1,15 @@
+name: sample-echo-channel
+version: "0.1.0"
+description: Minimal stdio channel plugin template for HopClaw
+author: HopClaw Example
+
+channels:
+  sample-echo:
+    type: stdio
+    command: "./echo_channel.py"
+    capabilities:
+      - send
+    config:
+      channel_id: "sample-echo"
+      echo_prefix: "Echo"
+    max_restarts: 5

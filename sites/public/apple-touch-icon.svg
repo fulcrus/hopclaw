@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none" role="img" aria-label="HopClaw touch icon">
+  <defs>
+    <linearGradient id="touchBg" x1="24" y1="20" x2="154" y2="162" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#183128" />
+      <stop offset="1" stop-color="#102019" />
+    </linearGradient>
+    <linearGradient id="touchAccent" x1="68" y1="118" x2="128" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D0743D" />
+      <stop offset="1" stop-color="#F2A15E" />
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="48" fill="url(#touchBg)" />
+  <rect x="12" y="12" width="156" height="156" rx="36" stroke="#FFFDF8" stroke-opacity="0.12" />
+  <path d="M63 50C43 57 32 74 32 94C32 117 48 136 73 142" stroke="#F7F2E8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M63 68C52 74 47 83 47 94C47 105 52 114 63 120" stroke="#F7F2E8" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M117 50C137 57 148 74 148 94C148 117 132 136 107 142" stroke="#F7F2E8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M117 68C128 74 133 83 133 94C133 105 128 114 117 120" stroke="#F7F2E8" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M67 118C79 90 96 69 118 55" stroke="url(#touchAccent)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="130" cy="48" r="11" fill="#D67B45" />
+  <circle cx="130" cy="48" r="4.5" fill="#FFF4E8" fill-opacity="0.82" />
+</svg>

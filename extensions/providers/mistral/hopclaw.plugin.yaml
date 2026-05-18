@@ -1,0 +1,11 @@
+name: mistral
+version: "1.0.0"
+description: Mistral model provider bundle
+
+providers:
+  mistral:
+    api: openai-completions
+    base_url: https://api.mistral.ai/v1
+    api_key_hint: Set MISTRAL_API_KEY environment variable
+    env_vars:
+      - MISTRAL_API_KEY

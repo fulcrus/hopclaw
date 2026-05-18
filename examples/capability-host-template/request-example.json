@@ -1,0 +1,7 @@
+{
+  "action": "create_session",
+  "session_id": "",
+  "params": {
+    "label": "demo"
+  }
+}

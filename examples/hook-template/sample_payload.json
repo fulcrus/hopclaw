@@ -1,0 +1,17 @@
+{
+  "run_id": "run_demo_123",
+  "session_id": "sess_demo_123",
+  "event_id": "evt_demo_123",
+  "event_time": "2026-03-21T12:34:56Z",
+  "event_type": "run.completed",
+  "status": "completed",
+  "result_summary": "Created a release checklist and queued the next step.",
+  "tool_name": "fs.write",
+  "_hook_context": {
+    "session_id": "sess_demo_123",
+    "run_id": "run_demo_123",
+    "tool_name": "fs.write",
+    "phase": "post",
+    "trigger_time": "2026-03-21T12:34:56Z"
+  }
+}

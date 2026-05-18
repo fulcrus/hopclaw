@@ -1,0 +1,192 @@
+/* ---------------------------------------------------------------------------
+   Governance View
+   --------------------------------------------------------------------------- */
+
+.hc-governance {
+  display: grid;
+  gap: 18px;
+}
+
+.hc-governance-toolbar,
+.hc-governance-toolbar-actions,
+.hc-governance-filterbar,
+.hc-governance-chiprow,
+.hc-governance-card-meta,
+.hc-governance-list-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hc-governance-toolbar {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hc-governance-subtitle {
+  margin: 6px 0 0;
+  color: var(--ink2);
+  line-height: 1.6;
+  max-width: 880px;
+}
+
+.hc-governance-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.hc-governance-metrics-wide {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.hc-governance-metrics-audit {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.hc-governance-filterbar .hc-form-input,
+.hc-governance-filterbar .hc-form-select {
+  min-width: 180px;
+}
+
+.hc-governance-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.hc-governance-chiprow {
+  justify-content: space-between;
+}
+
+.hc-governance-card-meta {
+  color: var(--ink3);
+  font-size: 0.78rem;
+}
+
+.hc-governance-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.hc-governance-checkbox input {
+  margin: 0;
+}
+
+.hc-governance-error {
+  color: var(--danger);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.hc-governance-detail-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.hc-governance-control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.hc-governance-span-full {
+  grid-column: 1 / -1;
+}
+
+.hc-governance-summary-list {
+  display: grid;
+  gap: 10px;
+}
+
+.hc-governance-issue-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+
+.hc-governance-audit-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.hc-governance-audit-table .hc-table td,
+.hc-governance-audit-table .hc-table th {
+  vertical-align: top;
+}
+
+.hc-governance-clickable-row {
+  cursor: pointer;
+}
+
+.hc-governance-row-active td {
+  background: var(--surface-alt);
+}
+
+.hc-governance-events .hc-table td,
+.hc-governance-events .hc-table th {
+  white-space: nowrap;
+}
+
+.hc-governance-events .hc-table td:last-child,
+.hc-governance-events .hc-table th:last-child {
+  white-space: normal;
+}
+
+@media (max-width: 1200px) {
+  .hc-governance-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hc-governance-metrics-wide {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hc-governance-metrics-audit {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .hc-governance-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-governance-control-grid,
+  .hc-governance-audit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-governance-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hc-governance-metrics-wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hc-governance-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-governance-metrics-wide,
+  .hc-governance-metrics-audit {
+    grid-template-columns: 1fr;
+  }
+
+  .hc-governance-filterbar .hc-form-input,
+  .hc-governance-filterbar .hc-form-select {
+    min-width: 100%;
+  }
+}

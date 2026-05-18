@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 132" fill="none" role="img" aria-label="HopClaw logo">
+  <defs>
+    <linearGradient id="hopclawLogoBg" x1="20" y1="14" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#183128" />
+      <stop offset="1" stop-color="#102019" />
+    </linearGradient>
+    <linearGradient id="hopclawLogoAccent" x1="48" y1="84" x2="96" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D0743D" />
+      <stop offset="1" stop-color="#F2A15E" />
+    </linearGradient>
+    <filter id="hopclawLogoShadow" x="2" y="4" width="124" height="124" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#112019" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#hopclawLogoShadow)">
+    <rect x="8" y="8" width="112" height="112" rx="30" fill="url(#hopclawLogoBg)" />
+    <rect x="9" y="9" width="110" height="110" rx="29" stroke="#FFFDF8" stroke-opacity="0.08" />
+  </g>
+
+  <path d="M45 35C32 40 25 51 25 64C25 79 36 91 52 95" stroke="#F7F2E8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M45 47C38 51 35 57 35 64C35 71 38 77 45 81" stroke="#F7F2E8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M83 35C96 40 103 51 103 64C103 79 92 91 76 95" stroke="#F7F2E8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M83 47C90 51 93 57 93 64C93 71 90 77 83 81" stroke="#F7F2E8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M47 84C55 64 67 49 84 39" stroke="url(#hopclawLogoAccent)" stroke-width="6.5" stroke-linecap="round"/>
+  <circle cx="92" cy="34" r="7" fill="#D67B45" />
+  <circle cx="92" cy="34" r="3" fill="#FFF4E8" fill-opacity="0.8" />
+
+  <text x="150" y="42" fill="#5C675F" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="0.22em">
+    GO-NATIVE AGENT RUNTIME
+  </text>
+  <text x="150" y="86" fill="#112019" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="46" font-weight="700" letter-spacing="-0.05em">
+    HopClaw
+  </text>
+  <text x="150" y="109" fill="#B86634" font-family="Inter, Instrument Sans, Arial, sans-serif" font-size="16" font-weight="600" letter-spacing="0.04em">
+    Go-native runtime · Clear boundaries · Builder-first bones
+  </text>
+</svg>

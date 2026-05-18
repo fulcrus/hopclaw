@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-label="HopClaw favicon">
+  <defs>
+    <linearGradient id="faviconBg" x1="20" y1="14" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#183128" />
+      <stop offset="1" stop-color="#102019" />
+    </linearGradient>
+    <linearGradient id="faviconAccent" x1="48" y1="84" x2="96" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D0743D" />
+      <stop offset="1" stop-color="#F2A15E" />
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="30" fill="url(#faviconBg)" />
+  <rect x="9" y="9" width="110" height="110" rx="29" stroke="#FFFDF8" stroke-opacity="0.08" />
+  <path d="M45 35C32 40 25 51 25 64C25 79 36 91 52 95" stroke="#F7F2E8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M45 47C38 51 35 57 35 64C35 71 38 77 45 81" stroke="#F7F2E8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M83 35C96 40 103 51 103 64C103 79 92 91 76 95" stroke="#F7F2E8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M83 47C90 51 93 57 93 64C93 71 90 77 83 81" stroke="#F7F2E8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M47 84C55 64 67 49 84 39" stroke="url(#faviconAccent)" stroke-width="6.5" stroke-linecap="round"/>
+  <circle cx="92" cy="34" r="7" fill="#D67B45" />
+  <circle cx="92" cy="34" r="3" fill="#FFF4E8" fill-opacity="0.8" />
+</svg>

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+staged_go_files="$(git diff --cached --name-only --diff-filter=ACMR | grep '\.go$' || true)"
+if [ -n "$staged_go_files" ]; then
+	unformatted=""
+	while IFS= read -r file; do
+		[ -n "$file" ] || continue
+		formatted="$(gofmt -l "$file")"
+		if [ -n "$formatted" ]; then
+			if [ -n "$unformatted" ]; then
+				unformatted="$unformatted
+$formatted"
+			else
+				unformatted="$formatted"
+			fi
+		fi
+	done <<EOF
+$staged_go_files
+EOF
+
+	if [ -n "$unformatted" ]; then
+		echo "gofmt check failed for staged Go files:" >&2
+		printf '%s\n' "$unformatted" >&2
+		echo "run 'gofmt -w <file>' and re-stage before committing." >&2
+		exit 1
+	fi
+fi
+
+echo "Running go vet ./..."
+go vet ./...

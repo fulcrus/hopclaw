@@ -1,0 +1,128 @@
+version: 2
+
+project_name: hopclaw
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: hopclaw
+    main: ./cmd/hopclaw
+    binary: hopclaw
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitDate }}"
+    ldflags:
+      - -s -w -X github.com/fulcrus/hopclaw/internal/version.Version={{ .Version }} -X github.com/fulcrus/hopclaw/internal/version.GitCommit={{ .FullCommit }} -X github.com/fulcrus/hopclaw/internal/version.BuildDate={{ .Date }} -X github.com/fulcrus/hopclaw/internal/version.Channel={{ .Env.HOPCLAW_RELEASE_CHANNEL }}
+
+  - id: openclaw
+    main: ./cmd/openclaw
+    binary: openclaw
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitDate }}"
+    ldflags:
+      - -s -w -X github.com/fulcrus/hopclaw/internal/version.Version={{ .Version }} -X github.com/fulcrus/hopclaw/internal/version.GitCommit={{ .FullCommit }} -X github.com/fulcrus/hopclaw/internal/version.BuildDate={{ .Date }} -X github.com/fulcrus/hopclaw/internal/version.Channel={{ .Env.HOPCLAW_RELEASE_CHANNEL }}
+
+  - id: hopclaw-browserd
+    main: ./cmd/hopclaw-browserd
+    binary: hopclaw-browserd
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitDate }}"
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+  - id: hopclaw-desktopd
+    main: ./cmd/hopclaw-desktopd
+    binary: hopclaw-desktopd
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitDate }}"
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+  - id: hopclaw-gateway
+    main: ./cmd/hopclaw-gateway
+    binary: hopclaw-gateway
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    mod_timestamp: "{{ .CommitDate }}"
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: runtime-bundles
+    ids:
+      - hopclaw
+      - openclaw
+      - hopclaw-browserd
+      - hopclaw-desktopd
+      - hopclaw-gateway
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    wrap_in_directory: true
+    files:
+      - README.md
+      - README.zh-CN.md
+      - CHANGELOG.md
+      - SECURITY.md
+      - LICENSE
+      - NOTICE
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+release:
+  prerelease: auto
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"

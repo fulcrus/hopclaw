@@ -1,0 +1,286 @@
+/* ---------------------------------------------------------------------------
+   Runs View
+   --------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   Filter Bar
+   --------------------------------------------------------------------------- */
+.hc-runs-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.hc-runs-filters .hc-input {
+  max-width: 200px;
+  padding: 8px 12px;
+  font-size: 0.84rem;
+}
+
+.hc-runs-filters .hc-filter-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink2);
+}
+
+.hc-runs-count {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--ink2);
+}
+
+/* ---------------------------------------------------------------------------
+   Runs Table
+   --------------------------------------------------------------------------- */
+.hc-runs-table .hc-table tr {
+  cursor: pointer;
+}
+
+.hc-runs-table .hc-table tr:hover td {
+  background: var(--accent-subtle);
+}
+
+.hc-runs-table .hc-run-id {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+.hc-runs-table .hc-run-session {
+  font-size: 0.82rem;
+  color: var(--ink2);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hc-runs-table .hc-run-model {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.hc-runs-table .hc-run-duration {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink2);
+}
+
+/* ---------------------------------------------------------------------------
+   Status Badges
+   --------------------------------------------------------------------------- */
+.hc-run-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hc-run-status-completed {
+  background: var(--success-subtle);
+  color: var(--success);
+}
+
+.hc-run-status-running {
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.hc-run-status-running .hc-dot {
+  animation: hc-pulse 1.5s ease-in-out infinite;
+}
+
+.hc-run-status-failed {
+  background: var(--danger-subtle);
+  color: var(--danger);
+}
+
+.hc-run-status-pending {
+  background: var(--warning-subtle);
+  color: var(--warning);
+}
+
+.hc-run-status-cancelled {
+  background: var(--surface-alt);
+  color: var(--ink3);
+}
+
+@keyframes hc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---------------------------------------------------------------------------
+   Run Detail Panel
+   --------------------------------------------------------------------------- */
+.hc-run-detail {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  margin-top: 16px;
+  overflow: hidden;
+  animation: hc-slide-down 0.2s ease;
+}
+
+@keyframes hc-slide-down {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 2000px; }
+}
+
+.hc-run-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.hc-run-detail-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.hc-run-detail-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--ink2);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-xs);
+}
+
+.hc-run-detail-close:hover { background: var(--surface-alt); }
+
+.hc-run-detail-body {
+  padding: 20px;
+}
+
+.hc-run-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.hc-run-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hc-run-meta-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink3);
+}
+
+.hc-run-meta-value {
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Tool Call Timeline
+   --------------------------------------------------------------------------- */
+.hc-tool-timeline {
+  border-left: 2px solid var(--border-light);
+  margin-left: 8px;
+  padding-left: 20px;
+}
+
+.hc-tool-timeline-item {
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.hc-tool-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.hc-tool-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+}
+
+.hc-tool-timeline-item.completed::before {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.hc-tool-timeline-item.failed::before {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.hc-tool-timeline-item.running::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  animation: hc-pulse 1.5s ease-in-out infinite;
+}
+
+.hc-tool-timeline-name {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.hc-tool-timeline-time {
+  font-size: 0.75rem;
+  color: var(--ink3);
+}
+
+.hc-tool-timeline-content {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink2);
+  background: var(--surface-alt);
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  margin-top: 6px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .hc-runs-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hc-runs-filters .hc-input {
+    max-width: none;
+  }
+
+  .hc-runs-count {
+    margin-left: 0;
+  }
+
+  .hc-run-detail-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
